@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Farias IT Services</title>
+<meta name="description" content="Farias IT Services — websites, e-commerce, workload migrations and IT support in Belgium.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f7f8fc; --surface:#ffffff; --text:#14172b; --muted:#5b6078;
+    --primary:#3b5bfd; --primary-dark:#2a44d4; --accent:#12b8a6;
+    --border:#e3e6f0; --hero1:#1b2050; --hero2:#3b5bfd;
+    --shadow:0 10px 30px rgba(20,23,43,.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0e1020; --surface:#171a30; --text:#eef0fa; --muted:#a3a8c3;
+      --border:#2a2e4a; --shadow:0 10px 30px rgba(0,0,0,.35);
+    }
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+  a{color:inherit;text-decoration:none}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* Header */
+  header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px}
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}
+  .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#fff;font-weight:800}
+  .links{display:flex;gap:24px;font-weight:500;color:var(--muted)}
+  .links a:hover{color:var(--primary)}
+  .lang{display:flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface)}
+  .lang button{border:0;background:transparent;color:var(--muted);padding:6px 12px;font:600 .85rem 'Inter',sans-serif;cursor:pointer}
+  .lang button.active{background:var(--primary);color:#fff}
+  @media (max-width:760px){.links{display:none}}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;padding:90px 0 100px;position:relative;overflow:hidden}
+  .hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:rgba(255,255,255,.07)}
+  .badge{display:inline-block;background:rgba(255,255,255,.15);padding:6px 14px;border-radius:999px;font-size:.85rem;font-weight:600;margin-bottom:18px}
+  .hero h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.15;font-weight:800;max-width:760px}
+  .hero p{font-size:1.15rem;opacity:.9;max-width:620px;margin:18px 0 32px}
+  .btns{display:flex;gap:12px;flex-wrap:wrap}
+  .btn{display:inline-block;padding:14px 26px;border-radius:12px;font-weight:700;transition:transform .15s}
+  .btn:hover{transform:translateY(-2px)}
+  .btn-white{background:#fff;color:var(--hero1)}
+  .btn-ghost{border:2px solid rgba(255,255,255,.6);color:#fff}
+
+  /* Sections */
+  section{padding:80px 0}
+  .eyebrow{color:var(--primary);font-weight:700;text-transform:uppercase;letter-spacing:.08em;font-size:.8rem}
+  h2{font-size:clamp(1.7rem,3.5vw,2.4rem);font-weight:800;margin:8px 0 12px}
+  .lead{color:var(--muted);max-width:640px;margin-bottom:40px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:28px;box-shadow:var(--shadow);transition:transform .2s}
+  .card:hover{transform:translateY(-4px)}
+  .icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;font-size:1.6rem;background:color-mix(in srgb,var(--primary) 12%,transparent);margin-bottom:16px}
+  .card h3{font-size:1.15rem;margin-bottom:8px}
+  .card p{color:var(--muted);font-size:.95rem}
+  .card ul{margin-top:12px;padding-left:18px;color:var(--muted);font-size:.9rem}
+
+  .alt{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)}
+  .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:20px;counter-reset:s}
+  .step{padding:24px;border-radius:16px;border:1px dashed var(--border)}
+  .step::before{counter-increment:s;content:counter(s);display:grid;place-items:center;width:40px;height:40px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;margin-bottom:12px}
+  .step h3{font-size:1.05rem;margin-bottom:6px}
+  .step p{color:var(--muted);font-size:.93rem}
+
+  .why{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+  .why div{display:flex;gap:12px;align-items:flex-start}
+  .why span{font-size:1.4rem}
+  .why p{color:var(--muted);font-size:.93rem}
+  .why strong{display:block;color:var(--text)}
+
+  /* Contact */
+  .contact{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:24px;padding:50px 30px;text-align:center}
+  .contact h2{color:#fff}
+  .contact p{opacity:.9;max-width:560px;margin:0 auto 26px}
+  .contact-info{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:24px;font-weight:500;opacity:.95}
+
+  footer{padding:30px 0;text-align:center;color:var(--muted);font-size:.9rem}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo"><span class="logo-mark">F</span> Farias IT Services</a>
+    <nav class="links">
+      <a href="#services" data-i18n="nav_services"></a>
+      <a href="#process" data-i18n="nav_process"></a>
+      <a href="#why" data-i18n="nav_why"></a>
+      <a href="#contact" data-i18n="nav_contact"></a>
+    </nav>
+    <div class="lang" role="group" aria-label="Language">
+      <button data-lang="en">EN</button>
+      <button data-lang="nl">NL</button>
+      <button data-lang="pt">PT</button>
+    </div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="wrap">
+    <span class="badge" data-i18n="hero_badge"></span>
+    <h1 data-i18n="hero_title"></h1>
+    <p data-i18n="hero_text"></p>
+    <div class="btns">
+      <a href="#contact" class="btn btn-white" data-i18n="hero_cta"></a>
+      <a href="#services" class="btn btn-ghost" data-i18n="hero_cta2"></a>
+    </div>
+  </div>
+</div>
+
+<section id="services">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="services_eyebrow"></div>
+    <h2 data-i18n="services_title"></h2>
+    <p class="lead" data-i18n="services_lead"></p>
+    <div class="grid">
+      <div class="card"><div class="icon">🌐</div><h3 data-i18n="s1_t"></h3><p data-i18n="s1_d"></p><ul data-i18n-list="s1_l"></ul></div>
+      <div class="card"><div class="icon">🛒</div><h3 data-i18n="s2_t"></h3><p data-i18n="s2_d"></p><ul data-i18n-list="s2_l"></ul></div>
+      <div class="card"><div class="icon">☁️</div><h3 data-i18n="s3_t"></h3><p data-i18n="s3_d"></p><ul data-i18n-list="s3_l"></ul></div>
+      <div class="card"><div class="icon">⚙️</div><h3 data-i18n="s4_t"></h3><p data-i18n="s4_d"></p><ul data-i18n-list="s4_l"></ul></div>
+      <div class="card"><div class="icon">🛠️</div><h3 data-i18n="s5_t"></h3><p data-i18n="s5_d"></p><ul data-i18n-list="s5_l"></ul></div>
+      <div class="card"><div class="icon">🔍</div><h3 data-i18n="s6_t"></h3><p data-i18n="s6_d"></p><ul data-i18n-list="s6_l"></ul></div>
+    </div>
+  </div>
+</section>
+
+<section id="process" class="alt">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="process_eyebrow"></div>
+    <h2 data-i18n="process_title"></h2>
+    <p class="lead" data-i18n="process_lead"></p>
+    <div class="steps">
+      <div class="step"><h3 data-i18n="p1_t"></h3><p data-i18n="p1_d"></p></div>
+      <div class="step"><h3 data-i18n="p2_t"></h3><p data-i18n="p2_d"></p></div>
+      <div class="step"><h3 data-i18n="p3_t"></h3><p data-i18n="p3_d"></p></div>
+      <div class="step"><h3 data-i18n="p4_t"></h3><p data-i18n="p4_d"></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="why">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="why_eyebrow"></div>
+    <h2 data-i18n="why_title"></h2>
+    <p class="lead"></p>
+    <div class="why">
+      <div><span>🗣️</span><p><strong data-i18n="w1_t"></strong><span data-i18n="w1_d" style="font-size:inherit"></span></p></div>
+      <div><span>💬</span><p><strong data-i18n="w2_t"></strong><span data-i18n="w2_d" style="font-size:inherit"></span></p></div>
+      <div><span>💶</span><p><strong data-i18n="w3_t"></strong><span data-i18n="w3_d" style="font-size:inherit"></span></p></div>
+      <div><span>🔒</span><p><strong data-i18n="w4_t"></strong><span data-i18n="w4_d" style="font-size:inherit"></span></p></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" style="padding-top:0">
+  <div class="wrap">
+    <div class="contact">
+      <h2 data-i18n="contact_title"></h2>
+      <p data-i18n="contact_text"></p>
+      <a href="mailto:contact@fariasit.be" class="btn btn-white" data-i18n="contact_cta"></a>
+      <div class="contact-info">
+        <span>✉️ contact@fariasit.be</span>
+        <span>📍 Leuven, Belgium</span>
+        <span>🌍 EN · NL · PT</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© <span id="year"></span> Farias IT Services · <span data-i18n="footer"></span></div>
+</footer>
+
+<script>
+const T = {
+  en: {
+    nav_services:"Services", nav_process:"How we work", nav_why:"Why us", nav_contact:"Contact",
+    hero_badge:"IT services in Belgium",
+    hero_title:"Websites, online shops and smooth migrations for your business",
+    hero_text:"Farias IT Services helps small businesses and teams get online, sell online and move their systems to modern infrastructure, without the headache.",
+    hero_cta:"Get in touch", hero_cta2:"See our services",
+    services_eyebrow:"What we do", services_title:"Our services",
+    services_lead:"From your first website to moving critical workloads, we take care of the technical side so you can focus on your business.",
+    s1_t:"Websites", s1_d:"Modern, fast and mobile-friendly websites that represent your brand.",
+    s1_l:["Company & portfolio sites","Multilingual websites","Hosting & domain setup"],
+    s2_t:"E-commerce", s2_d:"Online shops that are easy to manage and ready to sell.",
+    s2_l:["Product catalogue & cart","Payment integration","Shopify / WooCommerce setup"],
+    s3_t:"Workload migrations", s3_d:"Move your applications and data to new servers or the cloud safely.",
+    s3_l:["On-premise to cloud","Server & data migration","Planning, testing & cutover"],
+    s4_t:"Workflow automation", s4_d:"Automate repetitive jobs and schedule processes across your systems.",
+    s4_l:["Job scheduling","Workflow design","Monitoring & alerts"],
+    s5_t:"Maintenance & support", s5_d:"We keep your site and systems up to date, secure and running.",
+    s5_l:["Updates & backups","Bug fixes","Ongoing help"],
+    s6_t:"IT consulting", s6_d:"Not sure what you need? We help you choose the right solution.",
+    s6_l:["Technical advice","Tool selection","Digital roadmap"],
+    process_eyebrow:"Process", process_title:"How we work",
+    process_lead:"A clear, simple process from the first conversation to launch.",
+    p1_t:"Talk", p1_d:"We listen to your goals and understand your needs.",
+    p2_t:"Plan", p2_d:"You get a clear proposal with scope and timeline.",
+    p3_t:"Build", p3_d:"We build, migrate or automate, keeping you updated.",
+    p4_t:"Launch & support", p4_d:"We go live together and stay available afterwards.",
+    why_eyebrow:"Why choose us", why_title:"Why Farias IT Services",
+    w1_t:"Three languages", w1_d:"We speak English, Dutch and Portuguese.",
+    w2_t:"Clear communication", w2_d:"No confusing jargon, just honest updates.",
+    w3_t:"Fair pricing", w3_d:"Transparent quotes that fit small businesses.",
+    w4_t:"Safe & reliable", w4_d:"Backups, testing and security in every project.",
+    contact_title:"Let's work together",
+    contact_text:"Tell us about your project and we'll get back to you with a free proposal.",
+    contact_cta:"Send us an email",
+    footer:"All rights reserved"
+  },
+  nl: {
+    nav_services:"Diensten", nav_process:"Werkwijze", nav_why:"Waarom wij", nav_contact:"Contact",
+    hero_badge:"IT-diensten in België",
+    hero_title:"Websites, webshops en vlotte migraties voor uw bedrijf",
+    hero_text:"Farias IT Services helpt kleine bedrijven en teams om online te gaan, online te verkopen en hun systemen naar een moderne infrastructuur te verhuizen, zonder kopzorgen.",
+    hero_cta:"Neem contact op", hero_cta2:"Bekijk onze diensten",
+    services_eyebrow:"Wat we doen", services_title:"Onze diensten",
+    services_lead:"Van uw eerste website tot het verhuizen van kritieke workloads: wij zorgen voor de technische kant, zodat u zich op uw bedrijf kunt concentreren.",
+    s1_t:"Websites", s1_d:"Moderne, snelle en mobielvriendelijke websites die uw merk vertegenwoordigen.",
+    s1_l:["Bedrijfs- en portfoliowebsites","Meertalige websites","Hosting en domeinnaam"],
+    s2_t:"E-commerce", s2_d:"Webshops die eenvoudig te beheren zijn en klaar om te verkopen.",
+    s2_l:["Productcatalogus en winkelmandje","Betaalintegratie","Shopify / WooCommerce"],
+    s3_t:"Workloadmigraties", s3_d:"Verhuis uw applicaties en gegevens veilig naar nieuwe servers of de cloud.",
+    s3_l:["Van on-premise naar de cloud","Server- en datamigratie","Planning, testen en overschakeling"],
+    s4_t:"Workflowautomatisering", s4_d:"Automatiseer repetitieve taken en plan processen over uw systemen heen.",
+    s4_l:["Jobplanning","Workflowontwerp","Monitoring en meldingen"],
+    s5_t:"Onderhoud en support", s5_d:"Wij houden uw website en systemen up-to-date, veilig en draaiende.",
+    s5_l:["Updates en back-ups","Bugfixes","Doorlopende hulp"],
+    s6_t:"IT-advies", s6_d:"Niet zeker wat u nodig hebt? Wij helpen u de juiste oplossing te kiezen.",
+    s6_l:["Technisch advies","Keuze van tools","Digitale roadmap"],
+    process_eyebrow:"Werkwijze", process_title:"Hoe wij werken",
+    process_lead:"Een duidelijk en eenvoudig proces, van het eerste gesprek tot de lancering.",
+    p1_t:"Gesprek", p1_d:"We luisteren naar uw doelen en begrijpen uw noden.",
+    p2_t:"Plan", p2_d:"U krijgt een duidelijk voorstel met scope en timing.",
+    p3_t:"Bouwen", p3_d:"We bouwen, migreren of automatiseren en houden u op de hoogte.",
+    p4_t:"Lancering en support", p4_d:"We gaan samen live en blijven daarna beschikbaar.",
+    why_eyebrow:"Waarom kiezen voor ons", why_title:"Waarom Farias IT Services",
+    w1_t:"Drie talen", w1_d:"Wij spreken Engels, Nederlands en Portugees.",
+    w2_t:"Duidelijke communicatie", w2_d:"Geen vakjargon, gewoon eerlijke updates.",
+    w3_t:"Eerlijke prijzen", w3_d:"Transparante offertes op maat van kleine bedrijven.",
+    w4_t:"Veilig en betrouwbaar", w4_d:"Back-ups, testen en beveiliging in elk project.",
+    contact_title:"Laten we samenwerken",
+    contact_text:"Vertel ons over uw project en wij bezorgen u een gratis voorstel.",
+    contact_cta:"Stuur ons een e-mail",
+    footer:"Alle rechten voorbehouden"
+  },
+  pt: {
+    nav_services:"Serviços", nav_process:"Como trabalhamos", nav_why:"Por que nós", nav_contact:"Contato",
+    hero_badge:"Serviços de TI na Bélgica",
+    hero_title:"Sites, lojas virtuais e migrações tranquilas para o seu negócio",
+    hero_text:"A Farias IT Services ajuda pequenas empresas e equipes a entrar na internet, vender online e levar seus sistemas para uma infraestrutura moderna, sem dor de cabeça.",
+    hero_cta:"Fale conosco", hero_cta2:"Ver nossos serviços",
+    services_eyebrow:"O que fazemos", services_title:"Nossos serviços",
+    services_lead:"Do seu primeiro site até a migração de workloads críticos: cuidamos da parte técnica para você focar no seu negócio.",
+    s1_t:"Sites", s1_d:"Sites modernos, rápidos e adaptados ao celular, que representam a sua marca.",
+    s1_l:["Sites institucionais e portfólios","Sites em vários idiomas","Hospedagem e domínio"],
+    s2_t:"E-commerce", s2_d:"Lojas virtuais fáceis de gerenciar e prontas para vender.",
+    s2_l:["Catálogo de produtos e carrinho","Integração de pagamentos","Shopify / WooCommerce"],
+    s3_t:"Migração de workloads", s3_d:"Leve suas aplicações e dados para novos servidores ou para a nuvem com segurança.",
+    s3_l:["Do servidor local para a nuvem","Migração de servidores e dados","Planejamento, testes e virada"],
+    s4_t:"Automação de workflows", s4_d:"Automatize tarefas repetitivas e agende processos entre seus sistemas.",
+    s4_l:["Agendamento de jobs","Desenho de workflows","Monitoramento e alertas"],
+    s5_t:"Manutenção e suporte", s5_d:"Mantemos seu site e sistemas atualizados, seguros e funcionando.",
+    s5_l:["Atualizações e backups","Correção de erros","Ajuda contínua"],
+    s6_t:"Consultoria de TI", s6_d:"Não sabe do que precisa? A gente ajuda a escolher a solução certa.",
+    s6_l:["Orientação técnica","Escolha de ferramentas","Plano digital"],
+    process_eyebrow:"Processo", process_title:"Como trabalhamos",
+    process_lead:"Um processo simples e claro, da primeira conversa até o lançamento.",
+    p1_t:"Conversa", p1_d:"Ouvimos seus objetivos e entendemos suas necessidades.",
+    p2_t:"Plano", p2_d:"Você recebe uma proposta clara com escopo e prazo.",
+    p3_t:"Execução", p3_d:"Construímos, migramos ou automatizamos, sempre te atualizando.",
+    p4_t:"Lançamento e suporte", p4_d:"Colocamos no ar juntos e seguimos disponíveis depois.",
+    why_eyebrow:"Por que nos escolher", why_title:"Por que a Farias IT Services",
+    w1_t:"Três idiomas", w1_d:"Falamos inglês, holandês e português.",
+    w2_t:"Comunicação clara", w2_d:"Sem jargão complicado, só atualizações honestas.",
+    w3_t:"Preço justo", w3_d:"Orçamentos transparentes, pensados para pequenas empresas.",
+    w4_t:"Seguro e confiável", w4_d:"Backups, testes e segurança em todo projeto.",
+    contact_title:"Vamos trabalhar juntos",
+    contact_text:"Conte sobre o seu projeto e enviaremos uma proposta gratuita.",
+    contact_cta:"Envie um e-mail",
+    footer:"Todos os direitos reservados"
+  }
+};
+
+function setLang(lang){
+  if(!T[lang]) lang = "en";
+  const d = T[lang];
+  document.documentElement.lang = lang;
+  document.querySelectorAll("[data-i18n]").forEach(el=>{
+    const k = el.dataset.i18n;
+    if(d[k] !== undefined) el.textContent = (el.tagName==="SPAN" && el.previousElementSibling && el.previousElementSibling.tagName==="STRONG") ? d[k] : d[k];
+  });
+  document.querySelectorAll("[data-i18n-list]").forEach(ul=>{
+    ul.innerHTML = "";
+    (d[ul.dataset.i18nList]||[]).forEach(t=>{ const li=document.createElement("li"); li.textContent=t; ul.appendChild(li); });
+  });
+  document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("active", b.dataset.lang===lang));
+  try{ localStorage.setItem("farias_lang", lang); }catch(e){}
+}
+
+document.querySelectorAll(".lang button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+document.getElementById("year").textContent = new Date().getFullYear();
+
+let saved = null;
+try{ saved = localStorage.getItem("farias_lang"); }catch(e){}
+const browser = (navigator.language||"en").slice(0,2);
+setLang(saved || (T[browser] ? browser : "en"));
+</script>
+</body>
+</html>
