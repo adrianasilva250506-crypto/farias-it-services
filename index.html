@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Farias IT Services</title>
-<meta name="description" content="Farias IT Services — websites, e-commerce, workload migrations and IT support in Belgium.">
+<meta name="description" content="Farias IT Services — websites, e-commerce, workload migrations and IT support worldwide, from Leuven and Goiânia.">
+<link rel="icon" type="image/svg+xml" href="logo.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -30,7 +31,7 @@
   header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
   .nav{display:flex;align-items:center;justify-content:space-between;height:68px;gap:12px}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:1.15rem}
-  .logo-mark{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--primary),var(--accent));display:grid;place-items:center;color:#fff;font-weight:800}
+  .logo-mark{width:38px;height:38px;display:block}
   .links{display:flex;gap:24px;font-weight:500;color:var(--muted)}
   .links a:hover{color:var(--primary)}
   .lang{display:flex;border:1px solid var(--border);border-radius:999px;overflow:hidden;background:var(--surface)}
@@ -77,6 +78,17 @@
   .why p{color:var(--muted);font-size:.93rem}
   .why strong{display:block;color:var(--text)}
 
+  .demo{display:flex;flex-direction:column;gap:10px}
+  .demo .tag{align-self:flex-start;font-size:.75rem;font-weight:700;padding:4px 10px;border-radius:999px;background:color-mix(in srgb,var(--accent) 15%,transparent);color:var(--accent)}
+  .demo .tag.soon{background:color-mix(in srgb,var(--muted) 15%,transparent);color:var(--muted)}
+  .demo a.more{margin-top:auto;font-weight:700;color:var(--primary)}
+  .demo a.more.disabled{color:var(--muted);pointer-events:none}
+  .gh-link{display:inline-block;margin-top:28px;font-weight:700;color:var(--primary)}
+  .offices{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;max-width:560px;margin:26px auto 0}
+  .office{background:rgba(255,255,255,.12);border-radius:14px;padding:16px;text-align:left}
+  .office strong{display:block;font-size:1.05rem}
+  .office span{opacity:.85;font-size:.9rem}
+
   /* Contact */
   .contact{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;border-radius:24px;padding:50px 30px;text-align:center}
   .contact h2{color:#fff}
@@ -90,10 +102,11 @@
 
 <header>
   <div class="wrap nav">
-    <a href="#" class="logo"><span class="logo-mark">F</span> Farias IT Services</a>
+    <a href="#" class="logo"><img class="logo-mark" src="logo.svg" alt=""> Farias IT Services</a>
     <nav class="links">
       <a href="#services" data-i18n="nav_services"></a>
       <a href="#process" data-i18n="nav_process"></a>
+      <a href="#demos" data-i18n="nav_demos"></a>
       <a href="#why" data-i18n="nav_why"></a>
       <a href="#contact" data-i18n="nav_contact"></a>
     </nav>
@@ -147,7 +160,17 @@
   </div>
 </section>
 
-<section id="why">
+<section id="demos">
+  <div class="wrap">
+    <div class="eyebrow" data-i18n="demos_eyebrow"></div>
+    <h2 data-i18n="demos_title"></h2>
+    <p class="lead" data-i18n="demos_lead"></p>
+    <div class="grid" id="demo-grid"></div>
+    <a class="gh-link" href="https://github.com/adrianasilva250506-crypto" target="_blank" rel="noopener" data-i18n="demos_github"></a>
+  </div>
+</section>
+
+<section id="why" class="alt">
   <div class="wrap">
     <div class="eyebrow" data-i18n="why_eyebrow"></div>
     <h2 data-i18n="why_title"></h2>
@@ -167,10 +190,14 @@
       <h2 data-i18n="contact_title"></h2>
       <p data-i18n="contact_text"></p>
       <a href="mailto:contact@fariasit.be" class="btn btn-white" data-i18n="contact_cta"></a>
+      <div class="offices">
+        <div class="office">📍 <strong>Leuven</strong><span data-i18n="office_be"></span></div>
+        <div class="office">📍 <strong>Goiânia</strong><span data-i18n="office_br"></span></div>
+      </div>
       <div class="contact-info">
         <span>✉️ contact@fariasit.be</span>
-        <span>📍 Leuven, Belgium</span>
-        <span>🌍 EN · NL · PT</span>
+        <span>🌍 <span data-i18n="worldwide"></span></span>
+        <span>💬 English · Português</span>
       </div>
     </div>
   </div>
@@ -183,10 +210,30 @@
 <script>
 const T = {
   en: {
+    worldwide:"Serving clients worldwide",
+    office_br:"Brazil · South America",
+    office_be:"Belgium · Europe",
+    d4_d:"An example of scheduled jobs and automated workflows.",
+    d4_t:"Workflow automation",
+    d3_d:"A step-by-step plan for moving servers to the cloud.",
+    d3_t:"Workload migration plan",
+    d2_d:"An e-commerce demo with catalogue, cart and checkout.",
+    d2_t:"Online shop",
+    d1_d:"A modern, multilingual business website.",
+    d1_t:"Company website",
+    tag_soon:"Coming soon",
+    tag_live:"Live",
+    demo_soon_btn:"Coming soon",
+    demo_view:"View demo →",
+    demos_github:"See all projects on GitHub →",
+    demos_lead:"Live examples of our work. New demos are added every month.",
+    demos_title:"Demo projects",
+    demos_eyebrow:"Portfolio",
+    nav_demos:"Demos",
     nav_services:"Services", nav_process:"How we work", nav_why:"Why us", nav_contact:"Contact",
-    hero_badge:"IT services in Belgium",
+    hero_badge:"IT services · Belgium & Brazil · Worldwide",
     hero_title:"Websites, online shops and smooth migrations for your business",
-    hero_text:"Farias IT Services helps small businesses and teams get online, sell online and move their systems to modern infrastructure, without the headache.",
+    hero_text:"Farias IT Services helps businesses around the world get online, sell online and move their systems to modern infrastructure, without the headache. Offices in Leuven and Goiânia, working remotely with clients everywhere.",
     hero_cta:"Get in touch", hero_cta2:"See our services",
     services_eyebrow:"What we do", services_title:"Our services",
     services_lead:"From your first website to moving critical workloads, we take care of the technical side so you can focus on your business.",
@@ -209,7 +256,7 @@ const T = {
     p3_t:"Build", p3_d:"We build, migrate or automate, keeping you updated.",
     p4_t:"Launch & support", p4_d:"We go live together and stay available afterwards.",
     why_eyebrow:"Why choose us", why_title:"Why Farias IT Services",
-    w1_t:"Three languages", w1_d:"We speak English, Dutch and Portuguese.",
+    w1_t:"International, remote", w1_d:"We advise clients worldwide in English and Portuguese.",
     w2_t:"Clear communication", w2_d:"No confusing jargon, just honest updates.",
     w3_t:"Fair pricing", w3_d:"Transparent quotes that fit small businesses.",
     w4_t:"Safe & reliable", w4_d:"Backups, testing and security in every project.",
@@ -219,10 +266,30 @@ const T = {
     footer:"All rights reserved"
   },
   nl: {
+    worldwide:"Klanten wereldwijd",
+    office_br:"Brazilië · Zuid-Amerika",
+    office_be:"België · Europa",
+    d4_d:"Een voorbeeld van geplande jobs en geautomatiseerde workflows.",
+    d4_t:"Workflowautomatisering",
+    d3_d:"Een stappenplan om servers naar de cloud te verhuizen.",
+    d3_t:"Migratieplan voor workloads",
+    d2_d:"Een e-commercedemo met catalogus, winkelmandje en afrekenen.",
+    d2_t:"Webshop",
+    d1_d:"Een moderne, meertalige bedrijfswebsite.",
+    d1_t:"Bedrijfswebsite",
+    tag_soon:"Binnenkort",
+    tag_live:"Live",
+    demo_soon_btn:"Binnenkort",
+    demo_view:"Bekijk demo →",
+    demos_github:"Bekijk alle projecten op GitHub →",
+    demos_lead:"Live voorbeelden van ons werk. Elke maand komen er nieuwe demo's bij.",
+    demos_title:"Demoprojecten",
+    demos_eyebrow:"Portfolio",
+    nav_demos:"Demo's",
     nav_services:"Diensten", nav_process:"Werkwijze", nav_why:"Waarom wij", nav_contact:"Contact",
-    hero_badge:"IT-diensten in België",
+    hero_badge:"IT-diensten · België & Brazilië · Wereldwijd",
     hero_title:"Websites, webshops en vlotte migraties voor uw bedrijf",
-    hero_text:"Farias IT Services helpt kleine bedrijven en teams om online te gaan, online te verkopen en hun systemen naar een moderne infrastructuur te verhuizen, zonder kopzorgen.",
+    hero_text:"Farias IT Services helpt bedrijven over de hele wereld om online te gaan, online te verkopen en hun systemen naar een moderne infrastructuur te verhuizen, zonder kopzorgen. Kantoren in Leuven en Goiânia, we werken op afstand met klanten overal ter wereld.",
     hero_cta:"Neem contact op", hero_cta2:"Bekijk onze diensten",
     services_eyebrow:"Wat we doen", services_title:"Onze diensten",
     services_lead:"Van uw eerste website tot het verhuizen van kritieke workloads: wij zorgen voor de technische kant, zodat u zich op uw bedrijf kunt concentreren.",
@@ -245,7 +312,7 @@ const T = {
     p3_t:"Bouwen", p3_d:"We bouwen, migreren of automatiseren en houden u op de hoogte.",
     p4_t:"Lancering en support", p4_d:"We gaan samen live en blijven daarna beschikbaar.",
     why_eyebrow:"Waarom kiezen voor ons", why_title:"Waarom Farias IT Services",
-    w1_t:"Drie talen", w1_d:"Wij spreken Engels, Nederlands en Portugees.",
+    w1_t:"Internationaal, op afstand", w1_d:"Wij adviseren klanten wereldwijd in het Engels en het Portugees.",
     w2_t:"Duidelijke communicatie", w2_d:"Geen vakjargon, gewoon eerlijke updates.",
     w3_t:"Eerlijke prijzen", w3_d:"Transparante offertes op maat van kleine bedrijven.",
     w4_t:"Veilig en betrouwbaar", w4_d:"Back-ups, testen en beveiliging in elk project.",
@@ -255,10 +322,30 @@ const T = {
     footer:"Alle rechten voorbehouden"
   },
   pt: {
+    worldwide:"Clientes no mundo todo",
+    office_br:"Brasil · América do Sul",
+    office_be:"Bélgica · Europa",
+    d4_d:"Um exemplo de jobs agendados e workflows automáticos.",
+    d4_t:"Automação de workflows",
+    d3_d:"Um passo a passo para levar servidores para a nuvem.",
+    d3_t:"Plano de migração de workloads",
+    d2_d:"Uma demo de e-commerce com catálogo, carrinho e checkout.",
+    d2_t:"Loja virtual",
+    d1_d:"Um site empresarial moderno e em vários idiomas.",
+    d1_t:"Site institucional",
+    tag_soon:"Em breve",
+    tag_live:"No ar",
+    demo_soon_btn:"Em breve",
+    demo_view:"Ver demo →",
+    demos_github:"Ver todos os projetos no GitHub →",
+    demos_lead:"Exemplos reais do nosso trabalho. Novas demos todo mês.",
+    demos_title:"Projetos demo",
+    demos_eyebrow:"Portfólio",
+    nav_demos:"Demos",
     nav_services:"Serviços", nav_process:"Como trabalhamos", nav_why:"Por que nós", nav_contact:"Contato",
-    hero_badge:"Serviços de TI na Bélgica",
+    hero_badge:"Serviços de TI · Bélgica & Brasil · Mundo todo",
     hero_title:"Sites, lojas virtuais e migrações tranquilas para o seu negócio",
-    hero_text:"A Farias IT Services ajuda pequenas empresas e equipes a entrar na internet, vender online e levar seus sistemas para uma infraestrutura moderna, sem dor de cabeça.",
+    hero_text:"A Farias IT Services ajuda empresas do mundo todo a entrar na internet, vender online e levar seus sistemas para uma infraestrutura moderna, sem dor de cabeça. Escritórios em Leuven e Goiânia, atendendo clientes de qualquer lugar à distância.",
     hero_cta:"Fale conosco", hero_cta2:"Ver nossos serviços",
     services_eyebrow:"O que fazemos", services_title:"Nossos serviços",
     services_lead:"Do seu primeiro site até a migração de workloads críticos: cuidamos da parte técnica para você focar no seu negócio.",
@@ -281,7 +368,7 @@ const T = {
     p3_t:"Execução", p3_d:"Construímos, migramos ou automatizamos, sempre te atualizando.",
     p4_t:"Lançamento e suporte", p4_d:"Colocamos no ar juntos e seguimos disponíveis depois.",
     why_eyebrow:"Por que nos escolher", why_title:"Por que a Farias IT Services",
-    w1_t:"Três idiomas", w1_d:"Falamos inglês, holandês e português.",
+    w1_t:"Internacional e remoto", w1_d:"Atendemos clientes do mundo todo em inglês e português.",
     w2_t:"Comunicação clara", w2_d:"Sem jargão complicado, só atualizações honestas.",
     w3_t:"Preço justo", w3_d:"Orçamentos transparentes, pensados para pequenas empresas.",
     w4_t:"Seguro e confiável", w4_d:"Backups, testes e segurança em todo projeto.",
@@ -291,6 +378,29 @@ const T = {
     footer:"Todos os direitos reservados"
   }
 };
+
+// ===== DEMOS: add the link (url) when a demo is ready =====
+const DEMOS = [
+  { icon:"🌐", key:"d1", url:"" },
+  { icon:"🛒", key:"d2", url:"" },
+  { icon:"☁️", key:"d3", url:"" },
+  { icon:"⚙️", key:"d4", url:"" }
+];
+function renderDemos(d){
+  const g = document.getElementById("demo-grid"); g.innerHTML = "";
+  DEMOS.forEach(x=>{
+    const live = !!x.url;
+    const c = document.createElement("div"); c.className = "card demo";
+    c.innerHTML = '<div class="icon">'+x.icon+'</div>';
+    const tag = document.createElement("span"); tag.className = "tag"+(live?"":" soon"); tag.textContent = live?d.tag_live:d.tag_soon;
+    const h = document.createElement("h3"); h.textContent = d[x.key+"_t"];
+    const p = document.createElement("p"); p.textContent = d[x.key+"_d"];
+    const a = document.createElement("a"); a.className = "more"+(live?"":" disabled");
+    a.textContent = live?d.demo_view:d.demo_soon_btn;
+    if(live){ a.href = x.url; a.target = "_blank"; a.rel = "noopener"; }
+    c.append(tag,h,p,a); g.appendChild(c);
+  });
+}
 
 function setLang(lang){
   if(!T[lang]) lang = "en";
@@ -304,6 +414,7 @@ function setLang(lang){
     ul.innerHTML = "";
     (d[ul.dataset.i18nList]||[]).forEach(t=>{ const li=document.createElement("li"); li.textContent=t; ul.appendChild(li); });
   });
+  renderDemos(d);
   document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("active", b.dataset.lang===lang));
   try{ localStorage.setItem("farias_lang", lang); }catch(e){}
 }
