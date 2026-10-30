@@ -3,166 +3,264 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Brew &amp; Bean Lab — Coffee Gear Reviews</title>
-<meta name="description" content="Honest, hands-on reviews of coffee grinders, espresso machines and brewing gear. Demo affiliate website by Farias IT Services.">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<title>Brew &amp; Bean Lab — Independent Coffee Gear Reviews</title>
+<meta name="description" content="Independent, hands-on reviews of coffee grinders, espresso machines and brewing gear. Demo affiliate website by Farias IT Services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;600;700;800&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#fbf7f2; --card:#ffffff; --ink:#2b1d14; --muted:#7a6a5e;
-    --brand:#8a4b2a; --brand-dark:#5e3119; --accent:#f2a541; --line:#eadfd4;
-    --good:#2f8f5b; --bad:#c2453b;
+    --paper:#ffffff; --ink:#16201b; --soft:#4b5852; --muted:#6f7b75;
+    --brand:#1e4636; --brand-2:#2c6650; --mist:#edf1ee; --rule:#d9dfdb; --gold:#b8862b;
+    --sans:"Schibsted Grotesk",system-ui,sans-serif; --serif:"Source Serif 4",Georgia,serif;
   }
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+  body{font-family:var(--serif);font-size:1.0625rem;line-height:1.65;color:var(--ink);background:var(--paper)}
+  img{display:block;max-width:100%;background:var(--mist);color:transparent}
   a{color:inherit}
-  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
-  h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.2}
+  :focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  h1,h2,h3,.sans{font-family:var(--sans);line-height:1.15;letter-spacing:-.01em}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
 
-  /* demo ribbon */
-  .ribbon{background:var(--ink);color:#f5e9dd;font-size:.85rem;text-align:center;padding:8px 16px}
-  .ribbon a{color:var(--accent);font-weight:600}
+  .demo-bar{background:var(--mist);color:var(--soft);font:500 .82rem/1.4 var(--sans);text-align:center;padding:8px 16px}
+  .demo-bar a{color:var(--brand);font-weight:700}
 
   /* header */
-  header{position:sticky;top:0;z-index:10;background:rgba(251,247,242,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
-  .nav{display:flex;align-items:center;justify-content:space-between;height:66px}
-  .logo{font-family:Fraunces,serif;font-weight:800;font-size:1.35rem;text-decoration:none}
-  .logo span{color:var(--brand)}
-  .nav ul{display:flex;gap:26px;list-style:none}
-  .nav ul a{text-decoration:none;font-weight:500;color:var(--muted)}
+  header{border-bottom:1px solid var(--rule);background:var(--paper);position:sticky;top:0;z-index:20}
+  .nav{display:flex;align-items:center;gap:40px;height:68px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 1.2rem var(--sans);letter-spacing:-.02em}
+  .logo svg{flex:none}
+  .nav ul{display:flex;gap:28px;list-style:none;font:600 .95rem var(--sans)}
+  .nav ul a{text-decoration:none;color:var(--soft)}
   .nav ul a:hover{color:var(--brand)}
-  .menu-btn{display:none;background:none;border:0;font-size:1.6rem;cursor:pointer}
+  .nav .search{margin-left:auto;display:flex;align-items:center;gap:8px;border:1px solid var(--rule);border-radius:8px;padding:8px 12px;font:500 .9rem var(--sans);color:var(--muted);min-width:220px}
+  .menu-btn{display:none;margin-left:auto;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 10px;cursor:pointer}
 
-  /* hero */
-  .hero{padding:70px 0 50px;display:grid;grid-template-columns:1.2fr 1fr;gap:40px;align-items:center}
-  .tag{display:inline-block;background:#f6e3cf;color:var(--brand-dark);font-weight:600;font-size:.8rem;padding:5px 12px;border-radius:99px;margin-bottom:16px}
-  .hero h1{font-size:clamp(2.1rem,4.5vw,3.3rem);margin-bottom:16px}
-  .hero p{color:var(--muted);font-size:1.1rem;margin-bottom:26px;max-width:520px}
-  .btn{display:inline-block;background:var(--brand);color:#fff;text-decoration:none;font-weight:600;padding:13px 22px;border-radius:10px;border:0;cursor:pointer;transition:.2s}
-  .btn:hover{background:var(--brand-dark);transform:translateY(-2px)}
-  .btn.ghost{background:transparent;color:var(--brand);border:2px solid var(--brand);margin-left:10px}
-  .hero-art{background:linear-gradient(145deg,#c98b5e,#5e3119);border-radius:28px;aspect-ratio:1/1;display:grid;place-items:center;font-size:9rem;box-shadow:0 30px 60px -20px rgba(94,49,25,.5);position:relative}
-  .hero-art .badge{position:absolute;bottom:22px;left:-18px;background:#fff;border-radius:14px;padding:12px 16px;font-size:.9rem;box-shadow:0 10px 30px rgba(0,0,0,.12)}
-  .badge b{display:block;font-size:1.3rem;color:var(--brand)}
-  .stats{display:flex;gap:34px;margin-top:30px}
-  .stats div b{font-family:Fraunces,serif;font-size:1.6rem;display:block}
-  .stats div{color:var(--muted);font-size:.9rem}
+  /* hero: the verdict */
+  .hero{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;padding:56px 0 64px;align-items:start}
+  .crumbs{font:500 .85rem var(--sans);color:var(--muted);margin-bottom:18px}
+  .crumbs a{text-decoration:none}
+  .hero h1{font-size:clamp(2.3rem,4.6vw,3.6rem);font-weight:800;letter-spacing:-.03em;margin-bottom:18px}
+  .dek{font-size:1.2rem;color:var(--soft);max-width:34em;margin-bottom:24px}
+  .byline{display:flex;align-items:center;gap:12px;font:500 .9rem var(--sans);color:var(--soft);padding:16px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+  .avatar{width:40px;height:40px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700}
+  .byline b{color:var(--ink)}
+  .trust{display:flex;gap:10px;align-items:flex-start;margin-top:18px;font:500 .92rem/1.5 var(--sans);color:var(--soft)}
+  .trust svg{flex:none;margin-top:2px}
 
-  section{padding:60px 0}
-  .section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:28px;gap:20px;flex-wrap:wrap}
-  .section-head h2{font-size:2rem}
-  .section-head p{color:var(--muted)}
+  .verdict{border:1px solid var(--rule);border-radius:14px;overflow:hidden;background:var(--paper)}
+  .verdict img{width:100%;aspect-ratio:4/3;object-fit:cover}
+  .verdict .v-body{padding:24px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:center}
+  .score{width:76px;height:76px;border-radius:50%;border:4px solid var(--brand);display:grid;place-items:center;font:800 1.5rem var(--sans);color:var(--brand)}
+  .v-label{font:700 .85rem var(--sans);color:var(--gold)}
+  .verdict h2{font-size:1.45rem;margin:2px 0 4px}
+  .verdict p{font-size:.98rem;color:var(--soft)}
+  .v-cta{grid-column:1/-1;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 
-  /* comparison table */
-  .table-box{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow-x:auto}
-  table{width:100%;border-collapse:collapse;min-width:640px}
-  th,td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--line)}
-  th{background:#f6ede4;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
-  tr:last-child td{border-bottom:0}
-  .pill{font-size:.75rem;font-weight:600;padding:3px 10px;border-radius:99px;background:#fdebd0;color:#9a5b00}
-  .btn-sm{padding:8px 14px;font-size:.85rem;border-radius:8px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 .95rem var(--sans);text-decoration:none;background:var(--brand);color:#fff;padding:12px 20px;border-radius:8px;border:0;cursor:pointer}
+  .btn:hover{background:var(--brand-2)}
+  .btn.line{background:transparent;color:var(--brand);border:1.5px solid var(--brand)}
+  .btn.line:hover{background:var(--mist)}
+  .btn.small{padding:9px 15px;font-size:.88rem}
+  .note{font:500 .8rem var(--sans);color:var(--muted)}
 
-  /* filters + cards */
-  .filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:26px}
-  .filters button{border:1px solid var(--line);background:var(--card);padding:8px 16px;border-radius:99px;cursor:pointer;font:inherit;font-weight:500}
-  .filters button.active{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;transition:.25s}
-  .card:hover{transform:translateY(-4px);box-shadow:0 18px 40px -18px rgba(43,29,20,.3)}
-  .card .img{height:170px;display:grid;place-items:center;font-size:4.5rem;position:relative}
-  .card .img .pill{position:absolute;top:14px;left:14px;background:#fff}
-  .card .body{padding:20px;display:flex;flex-direction:column;gap:10px;flex:1}
-  .stars{color:var(--accent);letter-spacing:2px}
-  .stars small{color:var(--muted);letter-spacing:0;margin-left:6px}
-  .pc{display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.85rem}
-  .pc ul{list-style:none}
-  .pc .pro li::before{content:"✓ ";color:var(--good);font-weight:700}
-  .pc .con li::before{content:"✕ ";color:var(--bad);font-weight:700}
-  .card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:12px;border-top:1px dashed var(--line)}
-  .price{font-weight:600;color:var(--muted);font-size:.9rem}
+  section{padding:72px 0;border-top:1px solid var(--rule)}
+  .sec-head{max-width:640px;margin-bottom:36px}
+  .sec-head h2{font-size:clamp(1.7rem,3vw,2.3rem);font-weight:800;margin-bottom:10px}
+  .sec-head p{color:var(--soft)}
 
-  /* guide */
-  .guide{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:20px}
-  .step{background:var(--card);border-radius:18px;padding:24px;border:1px solid var(--line)}
-  .step .n{width:38px;height:38px;border-radius:50%;background:var(--accent);display:grid;place-items:center;font-weight:700;margin-bottom:14px}
-  .step h3{font-size:1.15rem;margin-bottom:6px}
-  .step p{color:var(--muted);font-size:.95rem}
+  /* ranked picks */
+  .ranked{list-style:none;counter-reset:r}
+  .ranked li{display:grid;grid-template-columns:56px 220px 1fr auto;gap:28px;align-items:center;padding:26px 0;border-bottom:1px solid var(--rule)}
+  .ranked li:first-child{border-top:1px solid var(--rule)}
+  .rank{font:800 2.2rem var(--sans);color:var(--rule)}
+  .ranked li:first-child .rank{color:var(--brand)}
+  .ranked img{width:220px;aspect-ratio:3/2;object-fit:cover;border-radius:10px}
+  .ranked .award{font:700 .85rem var(--sans);color:var(--gold)}
+  .ranked h3{font-size:1.35rem;margin:2px 0 6px}
+  .ranked p{color:var(--soft);font-size:1rem;max-width:36em}
+  .meta{display:flex;gap:18px;flex-wrap:wrap;margin-top:10px;font:500 .88rem var(--sans);color:var(--soft)}
+  .stars{color:var(--gold);letter-spacing:1px}
+  .ranked .act{text-align:right;display:flex;flex-direction:column;gap:8px;align-items:flex-end}
 
-  /* articles */
-  .posts{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px}
-  .post{text-decoration:none}
-  .post .thumb{border-radius:16px;height:160px;display:grid;place-items:center;font-size:3.5rem;margin-bottom:14px}
-  .post small{color:var(--brand);font-weight:600;text-transform:uppercase;font-size:.75rem;letter-spacing:.05em}
-  .post h3{font-size:1.2rem;margin:4px 0}
-  .post p{color:var(--muted);font-size:.92rem}
+  /* table */
+  .table-box{overflow-x:auto;border:1px solid var(--rule);border-radius:12px}
+  table{width:100%;border-collapse:collapse;min-width:720px;font-family:var(--sans);font-size:.95rem}
+  th,td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--rule);vertical-align:middle}
+  thead th{background:var(--mist);font-weight:700;color:var(--soft);font-size:.88rem}
+  tbody tr:last-child td{border-bottom:0}
+  td.yes{color:var(--brand);font-weight:700}
+  td.no{color:var(--muted)}
+
+  /* method */
+  .method{display:grid;grid-template-columns:repeat(4,1fr);gap:32px;counter-reset:m}
+  .method div{border-top:3px solid var(--brand);padding-top:18px}
+  .method h3{font-size:1.1rem;margin-bottom:8px}
+  .method h3::before{counter-increment:m;content:counter(m) ". ";color:var(--brand)}
+  .method p{color:var(--soft);font-size:.98rem}
+  .lab{margin-top:44px;display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:14px;overflow:hidden;background:var(--brand);color:#e8efe9}
+  .lab img{width:100%;height:100%;object-fit:cover;min-height:280px}
+  .lab .txt{padding:40px}
+  .lab h3{font-size:1.6rem;color:#fff;margin-bottom:12px}
+  .lab .nums{display:flex;gap:36px;margin-top:24px;font-family:var(--sans)}
+  .lab .nums b{display:block;font-size:2rem;color:#fff}
+
+  /* category reviews */
+  .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:28px;border-bottom:1px solid var(--rule)}
+  .tabs button{font:600 .95rem var(--sans);background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px;color:var(--soft);cursor:pointer;margin-bottom:-1px}
+  .tabs button[aria-selected="true"]{color:var(--ink);border-color:var(--brand)}
+  .reviews{display:grid;grid-template-columns:repeat(3,1fr);gap:36px 28px}
+  .review img{aspect-ratio:4/3;object-fit:cover;border-radius:10px;margin-bottom:14px;width:100%}
+  .review h3{font-size:1.15rem;margin-bottom:4px}
+  .review p{color:var(--soft);font-size:.97rem;margin:6px 0 10px}
+  .pc{font:500 .88rem/1.5 var(--sans);color:var(--soft);margin-bottom:14px}
+  .pc span{display:block}
+  .pc .p::before{content:"+ ";color:var(--brand);font-weight:800}
+  .pc .c::before{content:"– ";color:#a2473c;font-weight:800}
+
+  /* guides */
+  .guides{display:grid;grid-template-columns:1.3fr 1fr;gap:40px}
+  .g-main img{aspect-ratio:16/10;object-fit:cover;border-radius:12px;margin-bottom:16px;width:100%}
+  .g-main h3{font-size:1.6rem;margin-bottom:8px}
+  .g-list{display:flex;flex-direction:column}
+  .g-item{display:grid;grid-template-columns:120px 1fr;gap:18px;padding:18px 0;border-bottom:1px solid var(--rule);text-decoration:none}
+  .g-item:first-child{padding-top:0}
+  .g-item img{width:120px;aspect-ratio:1;object-fit:cover;border-radius:8px}
+  .g-item h3{font-size:1.05rem;margin-bottom:4px}
+  .g-item p,.g-main p{color:var(--soft);font-size:.95rem}
+  .kind{font:700 .82rem var(--sans);color:var(--brand)}
+  a.g-main,a.g-item{text-decoration:none}
+  a.g-main:hover h3,a.g-item:hover h3{text-decoration:underline;text-underline-offset:3px}
 
   /* newsletter */
-  .news{background:var(--ink);color:#f5e9dd;border-radius:24px;padding:46px;display:grid;grid-template-columns:1.2fr 1fr;gap:30px;align-items:center}
-  .news h2{font-size:2rem;color:#fff}
+  .news{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:var(--mist);border-radius:14px;padding:44px}
+  .news h2{font-size:1.8rem;margin-bottom:8px}
+  .news p{color:var(--soft)}
   .news form{display:flex;gap:10px}
-  .news input{flex:1;padding:13px 16px;border-radius:10px;border:0;font:inherit}
-  .news .msg{grid-column:1/-1;color:var(--accent);font-weight:600;display:none}
+  .news input{flex:1;font:500 1rem var(--sans);padding:12px 14px;border:1px solid var(--rule);border-radius:8px;background:#fff}
+  .news .ok{grid-column:1/-1;font:600 .95rem var(--sans);color:var(--brand);display:none}
 
-  footer{padding:40px 0 30px;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line);margin-top:40px}
-  .disclosure{background:#f6ede4;border-radius:12px;padding:14px 18px;margin-bottom:20px;color:var(--ink)}
-  .foot-row{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  footer{background:var(--ink);color:#b9c4be;font:500 .9rem/1.6 var(--sans);padding:56px 0 32px;margin-top:72px}
+  .f-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:36px}
+  footer h4{color:#fff;font-size:.95rem;margin-bottom:12px}
+  footer ul{list-style:none}
+  footer a{text-decoration:none}
+  footer a:hover{color:#fff}
+  .disclosure{border-top:1px solid #2e3a34;padding-top:22px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .disclosure p{max-width:640px}
 
-  @media (max-width:820px){
-    .hero,.news{grid-template-columns:1fr}
-    .hero-art{max-width:340px;margin:0 auto;font-size:7rem}
-    .nav ul{display:none;position:absolute;top:66px;left:0;right:0;background:var(--bg);flex-direction:column;padding:18px 20px;border-bottom:1px solid var(--line)}
+  @media (max-width:960px){
+    .hero,.guides,.news,.lab{grid-template-columns:1fr}
+    .method{grid-template-columns:1fr 1fr}
+    .reviews{grid-template-columns:1fr 1fr}
+    .ranked li{grid-template-columns:40px 140px 1fr}
+    .ranked img{width:140px}
+    .ranked .act{grid-column:2/-1;align-items:flex-start;text-align:left;flex-direction:row;flex-wrap:wrap}
+    .f-grid{grid-template-columns:1fr 1fr}
+    .nav .search{display:none}
+  }
+  @media (max-width:680px){
+    .nav ul{display:none;position:absolute;top:68px;left:0;right:0;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--rule)}
     .nav ul.open{display:flex}
+    .nav ul a{display:block;padding:14px 24px}
     .menu-btn{display:block}
-    .news{padding:30px}
-    .news form{flex-direction:column}
-    .btn.ghost{margin-left:0;margin-top:10px}
+    .reviews,.method{grid-template-columns:1fr}
+    .ranked li{grid-template-columns:1fr;gap:12px}
+    .ranked img{width:100%}
+    .ranked .act{grid-column:auto}
+    .rank{font-size:1.6rem}
+    .news{padding:28px}.news form{flex-direction:column}
+    .lab .txt{padding:28px}
+    .verdict .v-body{grid-template-columns:1fr}
   }
 </style>
 </head>
 <body>
 
-<div class="ribbon">🚧 This is a <b>demo website</b> built by <a href="../../">Farias IT Services</a>. Products and reviews are examples.</div>
+<div class="demo-bar">Demo website by <a href="../../">Farias IT Services</a>. Products, people and reviews are examples.</div>
 
 <header>
   <div class="wrap nav">
-    <a href="#" class="logo">Brew <span>&amp;</span> Bean Lab</a>
-    <button class="menu-btn" aria-label="Menu" onclick="document.querySelector('.nav ul').classList.toggle('open')">☰</button>
-    <ul>
-      <li><a href="#top-picks">Top Picks</a></li>
+    <a href="#" class="logo" aria-label="Brew and Bean Lab home">
+      <svg width="30" height="30" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#1e4636"/><path d="M9 12h12v6a6 6 0 0 1-12 0z" fill="none" stroke="#fff" stroke-width="2"/><path d="M21 13.5h2a2.5 2.5 0 0 1 0 5h-2" fill="none" stroke="#fff" stroke-width="2"/><path d="M13 6.5c0 1.5 2 1.5 2 3M17 6.5c0 1.5 2 1.5 2 3" stroke="#b8862b" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>
+      Brew &amp; Bean Lab
+    </a>
+    <ul id="menu">
+      <li><a href="#picks">Best picks</a></li>
+      <li><a href="#compare">Compare</a></li>
       <li><a href="#reviews">Reviews</a></li>
-      <li><a href="#guide">Buying Guide</a></li>
-      <li><a href="#blog">Blog</a></li>
+      <li><a href="#method">How we test</a></li>
+      <li><a href="#guides">Guides</a></li>
     </ul>
+    <div class="search" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      Search reviews
+    </div>
+    <button class="menu-btn" aria-label="Open menu" aria-controls="menu" aria-expanded="false" id="menuBtn">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
   </div>
 </header>
 
 <main>
   <div class="wrap hero">
     <div>
-      <span class="tag">☕ Updated for 2026</span>
-      <h1>Coffee gear, tested in a real kitchen — not a lab coat.</h1>
-      <p>We brew hundreds of cups so you don't waste money. Honest reviews of grinders, espresso machines and pour-over kits, with clear pros and cons.</p>
-      <a href="#top-picks" class="btn">See our top picks</a>
-      <a href="#guide" class="btn ghost">How we test</a>
-      <div class="stats">
-        <div><b>120+</b>products tested</div>
-        <div><b>4,500</b>cups brewed</div>
-        <div><b>0</b>paid rankings</div>
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="#">Home</a> / <a href="#">Grinders</a> / Best of 2026</nav>
+      <h1>The best coffee grinders of 2026</h1>
+      <p class="dek">We spent eight weeks grinding 60 kg of beans through 14 grinders. One clearly beat the rest for everyday home brewing, and it isn't the most expensive.</p>
+      <div class="byline">
+        <div class="avatar" aria-hidden="true">LM</div>
+        <div><b>Lena Marsh</b>, coffee gear editor<br>Updated 28 October 2026</div>
+      </div>
+      <div class="trust">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1e4636" stroke-width="2"><path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>
+        <span>We buy every product with our own money. Brands never see a review before it's published, and rankings are never for sale.</span>
       </div>
     </div>
-    <div class="hero-art">☕
-      <div class="badge">Editor's choice<b>Kettle Pro 2</b></div>
-    </div>
+
+    <article class="verdict">
+      <img src="https://images.unsplash.com/photo-1511537190424-bbbab87ac5eb?auto=format&fit=crop&w=1000&q=75" alt="Coffee beans being poured into a burr grinder">
+      <div class="v-body">
+        <div class="score" aria-label="Score 9.4 out of 10">9.4</div>
+        <div>
+          <div class="v-label">Our top pick</div>
+          <h2>BurrMaster 60</h2>
+          <p>The most consistent grind we measured under $250, from French press to espresso.</p>
+        </div>
+        <div class="v-cta">
+          <a class="btn amazon" data-q="conical burr coffee grinder" href="#" target="_blank" rel="nofollow sponsored noopener">Check price on Amazon</a>
+          <a class="btn line" href="#picks">See all picks</a>
+        </div>
+      </div>
+    </article>
   </div>
 
-  <section id="top-picks">
+  <section id="picks">
     <div class="wrap">
-      <div class="section-head">
-        <div><h2>Our top picks at a glance</h2><p>The short version, if you're in a hurry.</p></div>
+      <div class="sec-head">
+        <h2>Our picks, ranked</h2>
+        <p>Each one is the best at something. Start at the top if you just want one answer.</p>
+      </div>
+      <ol class="ranked" id="ranked"></ol>
+    </div>
+  </section>
+
+  <section id="compare">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>Side-by-side comparison</h2>
+        <p>The details that matter when you're choosing between our picks.</p>
       </div>
       <div class="table-box">
         <table>
-          <thead><tr><th>Product</th><th>Best for</th><th>Rating</th><th>Price range</th><th></th></tr></thead>
-          <tbody id="table-body"></tbody>
+          <thead><tr><th>Product</th><th>Our score</th><th>Grind settings</th><th>Espresso-capable</th><th>Noise</th><th>Price range</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><b>BurrMaster 60</b></td><td>9.4</td><td>40 steps</td><td class="yes">Yes</td><td>Medium</td><td>$150–$250</td><td><a class="btn small amazon" data-q="conical burr coffee grinder" href="#" target="_blank" rel="nofollow sponsored noopener">Check price</a></td></tr>
+            <tr><td><b>Flat Burr Studio</b></td><td>9.1</td><td>Stepless</td><td class="yes">Yes</td><td>Low</td><td>$350–$450</td><td><a class="btn small amazon" data-q="flat burr coffee grinder" href="#" target="_blank" rel="nofollow sponsored noopener">Check price</a></td></tr>
+            <tr><td><b>Hand Mill Mini</b></td><td>8.6</td><td>24 clicks</td><td class="no">Limited</td><td>Silent</td><td>$40–$70</td><td><a class="btn small amazon" data-q="manual coffee grinder steel burr" href="#" target="_blank" rel="nofollow sponsored noopener">Check price</a></td></tr>
+            <tr><td><b>Daily Blade Plus</b></td><td>7.2</td><td>Timer only</td><td class="no">No</td><td>High</td><td>$20–$35</td><td><a class="btn small amazon" data-q="electric coffee grinder" href="#" target="_blank" rel="nofollow sponsored noopener">Check price</a></td></tr>
+          </tbody>
         </table>
       </div>
     </div>
@@ -170,39 +268,58 @@
 
   <section id="reviews">
     <div class="wrap">
-      <div class="section-head">
-        <div><h2>In-depth reviews</h2><p>Filter by what you're shopping for.</p></div>
+      <div class="sec-head">
+        <h2>More reviews</h2>
+        <p>Browse our latest tests by category.</p>
       </div>
-      <div class="filters" id="filters">
-        <button class="active" data-cat="all">All</button>
-        <button data-cat="grinder">Grinders</button>
-        <button data-cat="espresso">Espresso</button>
-        <button data-cat="pourover">Pour-over</button>
-        <button data-cat="accessory">Accessories</button>
+      <div class="tabs" role="tablist" id="tabs">
+        <button role="tab" aria-selected="true" data-cat="all">All</button>
+        <button role="tab" aria-selected="false" data-cat="espresso">Espresso</button>
+        <button role="tab" aria-selected="false" data-cat="pourover">Pour-over</button>
+        <button role="tab" aria-selected="false" data-cat="accessory">Accessories</button>
       </div>
-      <div class="grid" id="grid"></div>
+      <div class="reviews" id="reviewGrid"></div>
     </div>
   </section>
 
-  <section id="guide">
+  <section id="method">
     <div class="wrap">
-      <div class="section-head"><div><h2>How to choose (and how we test)</h2><p>Four questions to ask before you buy anything.</p></div></div>
-      <div class="guide">
-        <div class="step"><div class="n">1</div><h3>How do you drink it?</h3><p>Espresso lovers need very different gear from filter fans. Start there.</p></div>
-        <div class="step"><div class="n">2</div><h3>Grinder first</h3><p>A good grinder improves every cup more than an expensive machine does.</p></div>
-        <div class="step"><div class="n">3</div><h3>Counter space</h3><p>We measure every product — small kitchens deserve good coffee too.</p></div>
-        <div class="step"><div class="n">4</div><h3>Real-life testing</h3><p>Each item is used daily for at least three weeks before we score it.</p></div>
+      <div class="sec-head">
+        <h2>How we test</h2>
+        <p>The same process for every product, so scores are fair and comparable.</p>
+      </div>
+      <div class="method">
+        <div><h3>We buy it</h3><p>Every product is bought at retail. No free samples, so no favours owed.</p></div>
+        <div><h3>We measure it</h3><p>Grind size is checked with sieves and a particle analyser, not just by eye.</p></div>
+        <div><h3>We live with it</h3><p>At least three weeks of daily use in a home kitchen, by two different testers.</p></div>
+        <div><h3>We score it</h3><p>Taste, consistency, build and value are scored separately, then combined.</p></div>
+      </div>
+      <div class="lab">
+        <img src="https://images.unsplash.com/photo-1553292218-4892c2e7e1ae?auto=format&fit=crop&w=900&q=75" alt="Two portafilters, one with whole beans and one with ground coffee" loading="lazy">
+        <div class="txt">
+          <h3>Our test kitchen in numbers</h3>
+          <p>Since 2021 we've tested more coffee gear than most cafés will ever own, and we publish what didn't make the cut too.</p>
+          <div class="nums"><div><b>120+</b>products tested</div><div><b>4,500</b>cups brewed</div><div><b>31</b>products rejected</div></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <section id="blog">
+  <section id="guides">
     <div class="wrap">
-      <div class="section-head"><div><h2>Latest from the blog</h2><p>Guides, recipes and gear news.</p></div></div>
-      <div class="posts">
-        <a href="#" class="post"><div class="thumb" style="background:#f3d9c0">🫘</div><small>Guide</small><h3>Light vs dark roast: what actually changes?</h3><p>A simple explanation of flavour, caffeine and brewing temperature.</p></a>
-        <a href="#" class="post"><div class="thumb" style="background:#d9e6d3">🧊</div><small>Recipe</small><h3>Cold brew at home in 3 easy steps</h3><p>No fancy equipment — just a jar, a filter and some patience.</p></a>
-        <a href="#" class="post"><div class="thumb" style="background:#e5dbf0">💸</div><small>Budget</small><h3>The best coffee setup under $150</h3><p>Our favourite combo of grinder, kettle and dripper on a budget.</p></a>
+      <div class="sec-head"><h2>Guides and recipes</h2><p>Simple explanations to get better coffee from the gear you already own.</p></div>
+      <div class="guides">
+        <a class="g-main" href="#">
+          <img src="https://images.unsplash.com/photo-1522012188892-24beb302783d?auto=format&fit=crop&w=1100&q=75" alt="Black coffee being poured into a white mug on a wooden table" loading="lazy">
+          <span class="kind">Guide</span>
+          <h3>Light or dark roast? What actually changes in your cup</h3>
+          <p>Flavour, caffeine and the water temperature each roast needs, explained without the jargon.</p>
+        </a>
+        <div class="g-list">
+          <a class="g-item" href="#"><img src="https://images.unsplash.com/photo-1602094689189-a7cb72dc1ff9?auto=format&fit=crop&w=300&q=70" alt="Iced coffee in a glass mug" loading="lazy"><div><span class="kind">Recipe</span><h3>Cold brew at home in three steps</h3><p>A jar, a filter and twelve hours.</p></div></a>
+          <a class="g-item" href="#"><img src="https://images.unsplash.com/photo-1616388761741-a5936c6f61f6?auto=format&fit=crop&w=300&q=70" alt="Espresso dripping into a yellow cup" loading="lazy"><div><span class="kind">How-to</span><h3>Dial in espresso in five shots or fewer</h3><p>The one variable to change first.</p></div></a>
+          <a class="g-item" href="#"><img src="https://images.unsplash.com/photo-1442512595331-e89e73853f31?auto=format&fit=crop&w=300&q=70" alt="Coffee being poured into a glass carafe" loading="lazy"><div><span class="kind">Budget</span><h3>The best coffee setup under $150</h3><p>Grinder, kettle and dripper that work together.</p></div></a>
+        </div>
       </div>
     </div>
   </section>
@@ -210,12 +327,13 @@
   <section>
     <div class="wrap">
       <div class="news">
-        <div><h2>Get one great tip every Friday</h2><p>Deals, new reviews and a recipe. No spam, unsubscribe anytime.</p></div>
-        <form id="news-form">
-          <input type="email" placeholder="your@email.com" required aria-label="Email">
+        <div><h2>New reviews in your inbox</h2><p>One email every Friday with our latest tests and the best deals we've found. Unsubscribe anytime.</p></div>
+        <form id="newsForm">
+          <label for="email" class="sr" style="position:absolute;left:-9999px">Email address</label>
+          <input id="email" type="email" placeholder="Email address" required>
           <button class="btn" type="submit">Subscribe</button>
         </form>
-        <p class="msg" id="news-msg">Thanks! (This is a demo — no email was sent.) ☕</p>
+        <p class="ok" id="newsOk" role="status">Subscribed. This is a demo, so no email will be sent.</p>
       </div>
     </div>
   </section>
@@ -223,89 +341,86 @@
 
 <footer>
   <div class="wrap">
-    <div class="disclosure"><b>Affiliate disclosure:</b> As an Amazon Associate, Brew &amp; Bean Lab earns from qualifying purchases. This doesn't change our rankings or the price you pay.</div>
-    <div class="foot-row">
-      <span>© 2026 Brew &amp; Bean Lab — demo site</span>
-      <span>Built by <a href="../../">Farias IT Services</a></span>
+    <div class="f-grid">
+      <div><h4>Brew &amp; Bean Lab</h4><p>Independent reviews of coffee gear for home brewers, since 2021.</p></div>
+      <div><h4>Reviews</h4><ul><li><a href="#">Grinders</a></li><li><a href="#">Espresso machines</a></li><li><a href="#">Kettles</a></li><li><a href="#">Pour-over</a></li></ul></div>
+      <div><h4>About</h4><ul><li><a href="#method">How we test</a></li><li><a href="#">Our team</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Privacy policy</a></li><li><a href="#">Affiliate disclosure</a></li><li><a href="#">Cookies</a></li></ul></div>
+    </div>
+    <div class="disclosure">
+      <p>As an Amazon Associate, Brew &amp; Bean Lab earns from qualifying purchases. When you buy through our links we may earn a commission, at no extra cost to you. This never affects our rankings.</p>
+      <p>© 2026 Brew &amp; Bean Lab. Built by <a href="../../" style="color:#fff">Farias IT Services</a>.</p>
     </div>
   </div>
 </footer>
 
 <script>
-  // 👉 Replace with your real Amazon Associates tag
+  // Replace with your real Amazon Associates tracking ID
   const AFFILIATE_TAG = "yourtag-20";
-  const amazonLink = q => `https://www.amazon.com/s?k=${encodeURIComponent(q)}&tag=${AFFILIATE_TAG}`;
+  const amazon = q => "https://www.amazon.com/s?k=" + encodeURIComponent(q) + "&tag=" + AFFILIATE_TAG;
+  const img = (id, w) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=${w}&q=72`;
+  const stars = r => "★★★★★".slice(0, Math.round(r)) + "☆☆☆☆☆".slice(0, 5 - Math.round(r));
 
-  const products = [
-    {name:"Kettle Pro 2", cat:"pourover", emoji:"🫖", bg:"#f3d9c0", rating:4.8, reviews:312, best:"Pour-over precision", price:"$$", badge:"Editor's choice",
-     desc:"Gooseneck electric kettle with temperature hold. Pours slowly and evenly every time.",
-     pros:["Exact temperature","Quiet boil"], cons:["Small 0.9 L size"], q:"gooseneck electric kettle"},
-    {name:"BurrMaster 60", cat:"grinder", emoji:"⚙️", bg:"#e2dcd3", rating:4.7, reviews:528, best:"Best all-round grinder", price:"$$", badge:"Best value",
-     desc:"Conical burr grinder with 40 settings — from French press to espresso.",
-     pros:["Very consistent","Easy to clean"], cons:["A bit loud"], q:"conical burr coffee grinder"},
-    {name:"Crema One", cat:"espresso", emoji:"☕", bg:"#d8c3b1", rating:4.5, reviews:204, best:"First espresso machine", price:"$$$", badge:"Beginner pick",
-     desc:"Compact espresso machine with a steam wand that is forgiving for beginners.",
-     pros:["Heats in 30s","Good milk foam"], cons:["Plastic drip tray"], q:"compact espresso machine steam wand"},
-    {name:"Hand Mill Mini", cat:"grinder", emoji:"🔩", bg:"#dde3ea", rating:4.4, reviews:141, best:"Travel & budget", price:"$", badge:"Budget",
-     desc:"Manual grinder with steel burrs. Fits in a backpack and grinds surprisingly well.",
-     pros:["Cheap","Portable"], cons:["Takes effort"], q:"manual coffee grinder steel burr"},
-    {name:"Glass Dripper Set", cat:"pourover", emoji:"⏳", bg:"#d9e6d3", rating:4.6, reviews:390, best:"Clean, bright cups", price:"$", badge:"Popular",
-     desc:"Glass cone dripper with server and 100 paper filters. A classic starter kit.",
-     pros:["Beautiful","Great value"], cons:["Glass is fragile"], q:"glass pour over coffee dripper set"},
-    {name:"Smart Scale S", cat:"accessory", emoji:"⚖️", bg:"#e5dbf0", rating:4.3, reviews:97, best:"Dialling in recipes", price:"$", badge:"Must-have",
-     desc:"Coffee scale with built-in timer, 0.1 g precision and a rechargeable battery.",
-     pros:["Accurate","USB-C"], cons:["Basic app"], q:"coffee scale with timer"},
+  const ranked = [
+    {award:"Best overall", name:"BurrMaster 60", score:9.4, rating:4.7, n:528, price:"$150–$250", photo:"1511537190424-bbbab87ac5eb", alt:"Burr grinder with coffee beans",
+     text:"Conical steel burrs and 40 clear settings. It produced the most even grind of any grinder under $300 and is easy to clean.", q:"conical burr coffee grinder"},
+    {award:"Best for espresso", name:"Flat Burr Studio", score:9.1, rating:4.8, n:211, price:"$350–$450", photo:"1609050471053-8636409f9f5b", alt:"Espresso pouring from a portafilter",
+     text:"Stepless adjustment and almost no retained grounds. Worth the upgrade if espresso is your daily drink.", q:"flat burr coffee grinder"},
+    {award:"Best budget", name:"Hand Mill Mini", score:8.6, rating:4.5, n:342, price:"$40–$70", photo:"1553292218-4892c2e7e1ae", alt:"Ground and whole coffee in portafilters",
+     text:"A manual grinder that outperforms electric models twice its price. Silent, portable and built to last.", q:"manual coffee grinder steel burr"},
   ];
+  document.getElementById("ranked").innerHTML = ranked.map((p, i) => `
+    <li>
+      <span class="rank" aria-hidden="true">${i + 1}</span>
+      <img src="${img(p.photo, 500)}" alt="${p.alt}" loading="lazy">
+      <div>
+        <div class="award">${p.award}</div>
+        <h3>${p.name}</h3>
+        <p>${p.text}</p>
+        <div class="meta"><span>Our score <b>${p.score}</b>/10</span><span><span class="stars" aria-hidden="true">${stars(p.rating)}</span> ${p.rating} from ${p.n} buyers</span><span>${p.price}</span></div>
+      </div>
+      <div class="act">
+        <a class="btn small" href="${amazon(p.q)}" target="_blank" rel="nofollow sponsored noopener">Check price on Amazon</a>
+        <a class="note" href="#">Read full review</a>
+      </div>
+    </li>`).join("");
 
-  const stars = r => "★".repeat(Math.round(r)) + "☆".repeat(5-Math.round(r));
-
-  document.getElementById("table-body").innerHTML = products.slice(0,4).map(p => `
-    <tr>
-      <td><b>${p.emoji} ${p.name}</b></td>
-      <td>${p.best}</td>
-      <td><span class="stars">${stars(p.rating)}</span> ${p.rating}</td>
-      <td>${p.price}</td>
-      <td><a class="btn btn-sm" href="${amazonLink(p.q)}" target="_blank" rel="nofollow sponsored noopener">Check price</a></td>
-    </tr>`).join("");
-
+  const reviews = [
+    {cat:"espresso", name:"Crema One", score:8.9, photo:"1475296204602-08d15839e95f", alt:"Espresso machine pouring into a mug", text:"A compact first espresso machine that's forgiving while you learn.", pro:"Heats up in 30 seconds", con:"Plastic drip tray", q:"compact espresso machine"},
+    {cat:"pourover", name:"Kettle Pro 2", score:9.2, photo:"1541469406036-71229832e06e", alt:"Water being poured from a kettle into a glass jar", text:"Gooseneck kettle with exact temperature control and a steady, slow pour.", pro:"Holds temperature for 1 hour", con:"Small 0.9 litre capacity", q:"gooseneck electric kettle"},
+    {cat:"pourover", name:"Glass Dripper Set", score:8.7, photo:"1442512595331-e89e73853f31", alt:"Coffee dripping into a glass carafe", text:"Glass cone, carafe and 100 filters. The easiest way to start pour-over.", pro:"Great value for a full kit", con:"Glass needs careful handling", q:"glass pour over coffee dripper set"},
+    {cat:"accessory", name:"Steam Pitcher 600", score:8.4, photo:"1587955245893-389f2215c6eb", alt:"Stainless steel milk pitcher with foamed milk", text:"A stainless milk jug with a sharp spout for cleaner latte art.", pro:"Measurement marks inside", con:"Handle gets warm", q:"stainless steel milk frothing pitcher"},
+    {cat:"espresso", name:"Barista Duo", score:8.8, photo:"1616388761741-a5936c6f61f6", alt:"Espresso dripping into a yellow cup", text:"Dual boilers so you can pull a shot and steam milk at the same time.", pro:"Café-level steam power", con:"Takes up a lot of counter", q:"dual boiler espresso machine"},
+    {cat:"accessory", name:"Precision Scale S", score:8.5, photo:"1495862433577-132cf20d7902", alt:"Coffee being poured into a mug", text:"0.1 g accuracy with a built-in timer. The most useful $30 you'll spend.", pro:"Rechargeable by USB-C", con:"Basic companion app", q:"coffee scale with timer"},
+  ];
   function render(cat){
-    document.getElementById("grid").innerHTML = products
-      .filter(p => cat==="all" || p.cat===cat)
-      .map(p => `
-      <article class="card">
-        <div class="img" style="background:${p.bg}"><span class="pill">${p.badge}</span>${p.emoji}</div>
-        <div class="body">
-          <h3>${p.name}</h3>
-          <div class="stars">${stars(p.rating)}<small>${p.rating} · ${p.reviews} reader ratings</small></div>
-          <p>${p.desc}</p>
-          <div class="pc">
-            <ul class="pro">${p.pros.map(x=>`<li>${x}</li>`).join("")}</ul>
-            <ul class="con">${p.cons.map(x=>`<li>${x}</li>`).join("")}</ul>
-          </div>
-          <div class="foot">
-            <span class="price">Price: ${p.price}</span>
-            <a class="btn btn-sm" href="${amazonLink(p.q)}" target="_blank" rel="nofollow sponsored noopener">View on Amazon →</a>
-          </div>
-        </div>
+    document.getElementById("reviewGrid").innerHTML = reviews.filter(r => cat === "all" || r.cat === cat).map(r => `
+      <article class="review">
+        <img src="${img(r.photo, 700)}" alt="${r.alt}" loading="lazy">
+        <h3>${r.name}</h3>
+        <div class="meta" style="margin-top:0">Our score <b>${r.score}</b>/10</div>
+        <p>${r.text}</p>
+        <div class="pc"><span class="p">${r.pro}</span><span class="c">${r.con}</span></div>
+        <a class="btn small line" href="${amazon(r.q)}" target="_blank" rel="nofollow sponsored noopener">Check price on Amazon</a>
       </article>`).join("");
   }
   render("all");
 
-  document.getElementById("filters").addEventListener("click", e => {
-    if(e.target.tagName!=="BUTTON") return;
-    document.querySelectorAll("#filters button").forEach(b=>b.classList.remove("active"));
-    e.target.classList.add("active");
-    render(e.target.dataset.cat);
+  document.getElementById("tabs").addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    document.querySelectorAll("#tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+    render(b.dataset.cat);
   });
 
-  document.getElementById("news-form").addEventListener("submit", e => {
-    e.preventDefault();
-    document.getElementById("news-msg").style.display = "block";
-    e.target.reset();
-  });
+  document.querySelectorAll("a.amazon").forEach(a => a.href = amazon(a.dataset.q));
 
-  document.querySelectorAll(".nav ul a").forEach(a => a.addEventListener("click", () =>
-    document.querySelector(".nav ul").classList.remove("open")));
+  const menu = document.getElementById("menu"), menuBtn = document.getElementById("menuBtn");
+  menuBtn.addEventListener("click", () => { const o = menu.classList.toggle("open"); menuBtn.setAttribute("aria-expanded", o); });
+  menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { menu.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false); }));
+
+  document.getElementById("newsForm").addEventListener("submit", e => {
+    e.preventDefault(); document.getElementById("newsOk").style.display = "block"; e.target.reset();
+  });
 </script>
 </body>
 </html>
