@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel Attic — Retro Games in Your Browser</title>
+<meta name="description" content="Play old-school arcade games right in your browser, with keyboard, touch or gamepad. Demo retro games website by Farias IT Services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#100e1d; --panel:#1b1830; --panel-2:#252142; --ink:#f4f1e8; --soft:#b9b4d0; --muted:#8a85a6;
+    --pink:#ff5c8a; --mint:#3ee6c1; --sun:#ffd23f; --violet:#9b7bff; --rule:#2f2a50;
+    --pixel:"Press Start 2P",monospace; --body:"Space Grotesk",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+  body{font-family:var(--body);font-size:1rem;line-height:1.6;color:var(--ink);background:var(--bg)}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer;color:inherit}
+  :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+  h1,h2,h3{font-family:var(--pixel);font-weight:400;line-height:1.4}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 24px}
+
+  .demo-bar{background:var(--panel-2);color:var(--soft);font-size:.82rem;text-align:center;padding:8px 16px}
+  .demo-bar a{color:var(--mint);font-weight:700}
+
+  header{background:rgba(16,14,29,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:30}
+  .nav{display:flex;align-items:center;gap:36px;height:70px}
+  .logo{display:flex;align-items:center;gap:12px;text-decoration:none;font:400 .9rem var(--pixel)}
+  .nav ul{display:flex;gap:26px;list-style:none;font-weight:500;font-size:.95rem}
+  .nav ul a{text-decoration:none;color:var(--soft)}
+  .nav ul a:hover{color:var(--mint)}
+  .nav .play-now{margin-left:auto}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;background:var(--pink);color:#1a0b12;border:0;border-radius:6px;padding:13px 22px;font-weight:700;font-size:.95rem;text-decoration:none;box-shadow:0 4px 0 #b33560;transition:transform .1s,box-shadow .1s}
+  .btn:hover{background:#ff7aa0}
+  .btn:active{transform:translateY(3px);box-shadow:0 1px 0 #b33560}
+  .btn.mint{background:var(--mint);box-shadow:0 4px 0 #22a386}
+  .btn.mint:active{box-shadow:0 1px 0 #22a386}
+  .btn.ghost{background:transparent;color:var(--ink);border:2px solid var(--rule);box-shadow:none}
+  .btn.ghost:hover{border-color:var(--soft)}
+  .btn.small{padding:9px 14px;font-size:.88rem}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;padding:64px 0}
+  .pill{display:inline-block;font:400 .65rem var(--pixel);color:var(--sun);border:2px solid var(--sun);padding:8px 12px;border-radius:4px;margin-bottom:22px}
+  .hero h1{font-size:clamp(1.5rem,3.6vw,2.5rem);margin-bottom:22px}
+  .hero h1 em{font-style:normal;color:var(--mint)}
+  .hero p{font-size:1.15rem;color:var(--soft);max-width:30em;margin-bottom:30px}
+  .cta{display:flex;gap:14px;flex-wrap:wrap}
+  .stats{display:flex;gap:32px;flex-wrap:wrap;margin-top:36px;color:var(--soft);font-size:.92rem}
+  .stats b{display:block;font:400 1rem var(--pixel);color:var(--ink);margin-bottom:6px}
+  .hero-art svg{width:100%;height:auto;display:block}
+  .blink{animation:blink 1.1s steps(1) infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  section{padding:72px 0;border-top:1px solid var(--rule)}
+  .sec-head{max-width:640px;margin-bottom:34px}
+  .sec-head h2{font-size:clamp(1.05rem,2.4vw,1.5rem);margin-bottom:14px}
+  .sec-head p{color:var(--soft)}
+
+  /* library */
+  .shelf{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+  .cart{background:var(--panel);border:2px solid var(--rule);border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+  .cart .cover{aspect-ratio:3/2;background:#0d0b1a;border-bottom:2px solid var(--rule)}
+  .cart .cover svg{width:100%;height:100%;display:block}
+  .cart .body{padding:20px;display:flex;flex-direction:column;flex:1}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+  .tags span{font-size:.75rem;font-weight:700;background:var(--panel-2);color:var(--soft);padding:3px 9px;border-radius:4px}
+  .tags .live{background:rgba(62,230,193,.15);color:var(--mint)}
+  .cart h3{font-size:.85rem;margin-bottom:10px}
+  .cart p{color:var(--soft);font-size:.95rem;flex:1;margin-bottom:16px}
+  .cart.soon{opacity:.6}
+  .cart.soon .btn{pointer-events:none}
+
+  /* player */
+  .player{display:grid;grid-template-columns:1.5fr 1fr;gap:32px;align-items:start}
+  .console{background:var(--panel);border:2px solid var(--rule);border-radius:18px;padding:18px}
+  .hud{display:flex;justify-content:space-between;font:400 .65rem var(--pixel);color:var(--soft);padding:2px 6px 12px}
+  .hud b{color:var(--sun);font-weight:400}
+  .screen{position:relative;border-radius:10px;overflow:hidden;background:#0d0b1a;box-shadow:inset 0 0 0 3px #000, 0 0 40px rgba(155,123,255,.18)}
+  .screen canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;image-rendering:pixelated;touch-action:none}
+  .screen::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.18) 0 1px,transparent 1px 3px);border-radius:10px}
+  .pad{display:flex;justify-content:space-between;align-items:center;padding:20px 8px 4px;user-select:none;-webkit-user-select:none}
+  .dpad{display:grid;grid-template-columns:repeat(3,48px);grid-template-rows:repeat(3,48px)}
+  .dpad button,.ab button{background:var(--panel-2);border:0;touch-action:none;-webkit-tap-highlight-color:transparent}
+  .dpad button:active,.dpad button.on,.ab button:active,.ab button.on{background:var(--violet)}
+  .dpad [data-k="up"]{grid-area:1/2;border-radius:8px 8px 0 0}
+  .dpad [data-k="left"]{grid-area:2/1;border-radius:8px 0 0 8px}
+  .dpad [data-k="right"]{grid-area:2/3;border-radius:0 8px 8px 0}
+  .dpad [data-k="down"]{grid-area:3/2;border-radius:0 0 8px 8px}
+  .dpad .mid{grid-area:2/2;background:var(--panel-2)}
+  .ab{display:flex;gap:16px;align-items:center}
+  .ab button{width:62px;height:62px;border-radius:50%;font:400 .7rem var(--pixel)}
+  .ab [data-k="a"]{background:var(--pink);color:#1a0b12;margin-top:-22px}
+  .ab [data-k="b"]{width:52px;height:52px}
+  .pad-label{display:block;text-align:center;font-size:.72rem;color:var(--muted);margin-top:4px}
+
+  .info{background:var(--panel);border:2px solid var(--rule);border-radius:18px;padding:24px}
+  .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
+  .picker button{background:var(--panel-2);border:2px solid transparent;border-radius:8px;padding:10px 6px;font-size:.85rem;font-weight:700;color:var(--soft)}
+  .picker button[aria-pressed="true"]{border-color:var(--mint);color:var(--ink)}
+  .info h3{font-size:.85rem;margin-bottom:10px;color:var(--mint)}
+  .info .desc{color:var(--soft);margin-bottom:18px}
+  .controls{list-style:none;display:grid;gap:8px;margin-bottom:22px;font-size:.93rem}
+  .controls li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed var(--rule);padding-bottom:8px}
+  .controls kbd{font:700 .8rem var(--body);background:var(--panel-2);border-radius:4px;padding:2px 8px;color:var(--ink);white-space:nowrap}
+  .info .row{display:flex;gap:10px;flex-wrap:wrap}
+
+  /* scores */
+  .table-box{border:2px solid var(--rule);border-radius:12px;overflow:hidden;max-width:720px}
+  table{width:100%;border-collapse:collapse}
+  th,td{padding:16px 18px;text-align:left;border-bottom:1px solid var(--rule)}
+  thead th{background:var(--panel-2);color:var(--soft);font-size:.85rem}
+  tbody tr:last-child td{border-bottom:0}
+  td.num{font:400 .8rem var(--pixel);color:var(--sun)}
+  .scores-foot{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-top:18px;color:var(--muted);font-size:.9rem}
+
+  /* how */
+  .how{display:grid;grid-template-columns:repeat(4,1fr);gap:22px}
+  .how div{background:var(--panel);border:2px solid var(--rule);border-radius:12px;padding:24px}
+  .how .n{font:400 .7rem var(--pixel);color:var(--pink)}
+  .how h3{font-family:var(--body);font-weight:700;font-size:1.1rem;margin:12px 0 8px}
+  .how p{color:var(--soft);font-size:.95rem}
+  .legal{margin-top:28px;border:2px dashed var(--sun);border-radius:12px;padding:20px 24px;color:var(--soft);max-width:820px}
+  .legal b{color:var(--sun)}
+
+  /* faq */
+  .faq{max-width:760px}
+  .faq details{border-bottom:1px solid var(--rule);padding:18px 0}
+  .faq summary{font-weight:700;cursor:pointer;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-family:var(--pixel);color:var(--mint)}
+  .faq details[open] summary::after{content:"-"}
+  .faq p{color:var(--soft);margin-top:10px}
+
+  footer{background:#0a0914;color:var(--muted);font-size:.9rem;padding:52px 0 30px;border-top:1px solid var(--rule)}
+  .f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px;margin-bottom:32px}
+  footer h4{color:var(--ink);margin-bottom:10px;font-size:1rem}
+  footer ul{list-style:none}
+  footer a{text-decoration:none}
+  footer a:hover{color:var(--ink)}
+  .f-bottom{border-top:1px solid var(--rule);padding-top:20px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media (max-width:960px){
+    .hero,.player{grid-template-columns:1fr}
+    .shelf{grid-template-columns:1fr 1fr}
+    .how{grid-template-columns:1fr 1fr}
+    .f-grid{grid-template-columns:1fr 1fr}
+    .nav ul{display:none}
+    .hero-art{max-width:520px}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    .shelf,.how{grid-template-columns:1fr}
+    .console{padding:12px;border-radius:14px}
+    .dpad{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,44px)}
+    .logo span{font-size:.75rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">Demo website by <a href="../../">Farias IT Services</a>. The games are originals made for this demo, and scores stay in your browser.</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo" aria-label="Pixel Attic home">
+      <svg width="34" height="34" viewBox="0 0 16 16" shape-rendering="crispEdges" aria-hidden="true"><rect width="16" height="16" rx="3" fill="#9b7bff"/><rect x="7" y="3" width="2" height="6" fill="#100e1d"/><rect x="6" y="2" width="4" height="3" fill="#ff5c8a"/><rect x="3" y="9" width="10" height="4" fill="#100e1d"/><rect x="5" y="10" width="2" height="2" fill="#3ee6c1"/><rect x="9" y="10" width="2" height="2" fill="#ffd23f"/></svg>
+      <span>Pixel Attic</span>
+    </a>
+    <ul>
+      <li><a href="#games">Games</a></li>
+      <li><a href="#play">Arcade</a></li>
+      <li><a href="#scores">High scores</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <a class="btn small play-now" href="#play">▶ Play</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <span class="pill">INSERT COIN: FREE</span>
+      <h1>Old-school games, <em>right in your browser</em></h1>
+      <p>No downloads and no account. Pick a cartridge, press start and chase your high score with a keyboard, a gamepad or your phone.</p>
+      <div class="cta">
+        <a class="btn" href="#play">▶ Play now</a>
+        <a class="btn ghost" href="#how">How it works</a>
+      </div>
+      <div class="stats">
+        <div><b>3</b>games to play now</div>
+        <div><b>0</b>downloads needed</div>
+        <div><b>3</b>ways to play: keys, touch, pad</div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 160 120" shape-rendering="crispEdges">
+        <rect x="8" y="6" width="144" height="100" rx="10" fill="#252142"/>
+        <rect x="18" y="14" width="124" height="78" rx="6" fill="#0d0b1a"/>
+        <g fill="#3ee6c1"><rect x="34" y="62" width="6" height="6"/><rect x="41" y="62" width="6" height="6"/><rect x="48" y="62" width="6" height="6"/><rect x="55" y="62" width="6" height="6"/><rect x="55" y="55" width="6" height="6"/><rect x="55" y="48" width="6" height="6"/><rect x="62" y="48" width="6" height="6"/><rect x="69" y="48" width="6" height="6" fill="#a8ffe9"/></g>
+        <rect x="98" y="49" width="5" height="5" fill="#ff5c8a"/>
+        <g fill="#ff5c8a"><rect x="26" y="22" width="16" height="5"/></g><g fill="#ffd23f"><rect x="44" y="22" width="16" height="5"/></g><g fill="#3ee6c1"><rect x="62" y="22" width="16" height="5"/></g><g fill="#9b7bff"><rect x="80" y="22" width="16" height="5"/></g><g fill="#ff5c8a"><rect x="98" y="22" width="16" height="5"/></g><g fill="#ffd23f"><rect x="116" y="22" width="16" height="5"/></g>
+        <g class="blink" fill="#f4f1e8"><rect x="54" y="80" width="52" height="4" opacity=".9"/></g>
+        <rect x="30" y="98" width="10" height="4" fill="#ff5c8a"/><rect x="120" y="98" width="10" height="4" fill="#3ee6c1"/>
+        <rect x="50" y="106" width="60" height="8" fill="#1b1830"/>
+      </svg>
+    </div>
+  </div>
+
+  <section id="games">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The cartridge shelf</h2>
+        <p>Three games are ready to play. More homebrew titles are on the way.</p>
+      </div>
+      <div class="shelf" id="shelf"></div>
+    </div>
+  </section>
+
+  <section id="play">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>The arcade</h2>
+        <p>Click the screen or press Space to start. On a phone, use the buttons under the screen.</p>
+      </div>
+      <div class="player">
+        <div class="console">
+          <div class="hud"><span id="hudName">SNAKE TRAIL</span><span>SCORE <b id="hudScore">0</b> · BEST <b id="hudBest">0</b></span></div>
+          <div class="screen"><canvas id="screen" width="320" height="240" aria-label="Game screen"></canvas></div>
+          <div class="pad">
+            <div>
+              <div class="dpad">
+                <button data-k="up" aria-label="Up"></button>
+                <button data-k="left" aria-label="Left"></button>
+                <span class="mid"></span>
+                <button data-k="right" aria-label="Right"></button>
+                <button data-k="down" aria-label="Down"></button>
+              </div>
+            </div>
+            <div>
+              <div class="ab">
+                <div><button data-k="b" aria-label="Pause">II</button><span class="pad-label">Pause</span></div>
+                <div><button data-k="a" aria-label="Start or action">A</button><span class="pad-label">Start</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info">
+          <div class="picker" id="picker"></div>
+          <h3 id="infoName"></h3>
+          <p class="desc" id="infoDesc"></p>
+          <ul class="controls" id="infoControls"></ul>
+          <div class="row">
+            <button class="btn mint small" id="startBtn">▶ Start</button>
+            <button class="btn ghost small" id="pauseBtn">Pause</button>
+            <button class="btn ghost small" id="soundBtn" aria-pressed="true">Sound: on</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scores">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>High scores</h2>
+        <p>Your best run for each game. They're saved in this browser only.</p>
+      </div>
+      <div class="table-box">
+        <table>
+          <thead><tr><th>Game</th><th>Your best</th><th>Target to beat</th></tr></thead>
+          <tbody id="bestRows"></tbody>
+        </table>
+      </div>
+      <div class="scores-foot"><button class="btn ghost small" id="clearBest">Clear my scores</button><span>A real site could add accounts and a world leaderboard.</span></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <div class="wrap">
+      <div class="sec-head">
+        <h2>How a retro site works</h2>
+        <p>This demo runs small games written for the web. A full retro games site adds an emulator, and here's how that fits together.</p>
+      </div>
+      <div class="how">
+        <div><span class="n">01</span><h3>An emulator in the browser</h3><p>Tools like EmulatorJS run classic consoles inside the web page, using WebAssembly. Nothing to install.</p></div>
+        <div><span class="n">02</span><h3>Only legal games</h3><p>The library is built from homebrew games whose makers allow it, public domain titles, or games the player owns.</p></div>
+        <div><span class="n">03</span><h3>Saves and controllers</h3><p>Save states keep your progress, and the browser's Gamepad API connects USB and Bluetooth controllers.</p></div>
+        <div><span class="n">04</span><h3>Accounts and leaderboards</h3><p>A small database stores players, favourite games and a shared high-score table.</p></div>
+      </div>
+      <div class="legal"><b>Good to know:</b> putting commercial games (ROMs) online without permission is piracy, even if they're very old. A professional retro site works with homebrew developers or licensed collections instead.</div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head"><h2>Questions</h2></div>
+      <div class="faq">
+        <details><summary>Do I need to install anything?</summary><p>No. Everything runs in your web browser, on a computer, tablet or phone.</p></details>
+        <details><summary>Can I play with a controller?</summary><p>Yes. Plug in or pair a gamepad, press any button, and use the stick or d-pad. The A button starts the game, Start pauses it.</p></details>
+        <details><summary>Does it work on my phone?</summary><p>Yes. Use the on-screen buttons, or drag your finger on the screen to move the paddle in Brick Blaster and Paddle Duel.</p></details>
+        <details><summary>Are my high scores saved?</summary><p>In this demo, they're kept in your browser only. Clearing your browser data removes them.</p></details>
+        <details><summary>Can you add famous console games?</summary><p>Only with the right licences. This demo uses original games so there's no copyright problem.</p></details>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div><h4>Pixel Attic</h4><p>Free retro-style games for the web, made with love for pixels.</p></div>
+      <div><h4>Play</h4><ul><li><a href="#games">All games</a></li><li><a href="#play">Arcade</a></li><li><a href="#scores">High scores</a></li></ul></div>
+      <div><h4>Help</h4><ul><li><a href="#faq">FAQ</a></li><li><a href="#how">How it works</a></li><li><a href="#">Contact</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Terms</a></li><li><a href="#">Privacy policy</a></li><li><a href="#">Cookies</a></li></ul></div>
+    </div>
+    <div class="f-bottom">
+      <p>© 2026 Pixel Attic. A demo site, not a real business.</p>
+      <p>Built by <a href="../../" style="color:#fff">Farias IT Services</a>.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* ================= setup ================= */
+  const W = 320, H = 240;
+  const cv = document.getElementById("screen"), ctx = cv.getContext("2d");
+  const R = Math.min(3, Math.max(2, Math.round(window.devicePixelRatio || 1)));
+  cv.width = W * R; cv.height = H * R; ctx.setTransform(R, 0, 0, R, 0, 0); ctx.imageSmoothingEnabled = false;
+  const C = {bg:"#0d0b1a", tile:"#13102a", ink:"#f4f1e8", soft:"#b9b4d0", pink:"#ff5c8a", mint:"#3ee6c1", sun:"#ffd23f", violet:"#9b7bff", orange:"#ff9b5c", dim:"#3a3462"};
+  const FONT = '"Press Start 2P", monospace';
+  const rand = n => Math.floor(Math.random() * n);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  function text(s, x, y, size = 8, color = C.ink, align = "center"){
+    ctx.font = size + "px " + FONT; ctx.fillStyle = color; ctx.textAlign = align; ctx.textBaseline = "middle"; ctx.fillText(s, x, y);
+  }
+
+  /* ================= sound ================= */
+  let ac = null, soundOn = true;
+  function beep(f = 440, d = .06, type = "square", vol = .045){
+    if (!soundOn) return;
+    try {
+      ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+      if (ac.state === "suspended") ac.resume();
+      const o = ac.createOscillator(), g = ac.createGain();
+      o.type = type; o.frequency.value = f;
+      g.gain.setValueAtTime(vol, ac.currentTime); g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + d);
+      o.connect(g).connect(ac.destination); o.start(); o.stop(ac.currentTime + d);
+    } catch (e) {}
+  }
+
+  /* ================= best scores (this browser only) ================= */
+  let best = {};
+  try { best = JSON.parse(localStorage.getItem("pa-best") || "{}") || {}; } catch (e) { best = {}; }
+  const saveBest = () => { try { localStorage.setItem("pa-best", JSON.stringify(best)); } catch (e) {} };
+
+  /* ================= shared state ================= */
+  let gid = "snake", game = null, state = "title", score = 0, newBest = false, ptr = null;
+  const held = {left:false, right:false, up:false, down:false};
+  function gameOver(won){
+    state = "over"; game.won = !!won;
+    newBest = score > (best[gid] || 0);
+    if (newBest){ best[gid] = score; saveBest(); renderBest(); }
+    won ? [523, 659, 784].forEach((f, i) => setTimeout(() => beep(f, .12), i * 110)) : beep(140, .35, "sawtooth", .05);
+  }
+
+  /* ================= game 1: snake ================= */
+  const snake = {
+    name:"Snake Trail", tags:["Arcade", "1 player"], score:"300",
+    desc:"Eat the pink pixels to grow longer. Don't hit the walls or your own tail. You get a little faster with every bite.",
+    controls:[["Move", "Arrows / WASD"], ["Start", "Space / A"], ["Pause", "P / Start"]],
+    reset(){
+      this.body = [{x:8, y:7}, {x:7, y:7}, {x:6, y:7}];
+      this.dir = {x:1, y:0}; this.queue = []; this.t = 0; this.speed = .13; this.food = this.place();
+    },
+    place(){ let p; do { p = {x:rand(20), y:rand(15)}; } while (this.body.some(b => b.x === p.x && b.y === p.y)); return p; },
+    key(k){
+      const d = {left:{x:-1, y:0}, right:{x:1, y:0}, up:{x:0, y:-1}, down:{x:0, y:1}}[k]; if (!d) return;
+      const last = this.queue.length ? this.queue[this.queue.length - 1] : this.dir;
+      if ((d.x === -last.x && d.y === -last.y) || (d.x === last.x && d.y === last.y)) return;
+      if (this.queue.length < 3) this.queue.push(d);
+    },
+    update(dt){
+      this.t += dt;
+      while (this.t >= this.speed){
+        this.t -= this.speed;
+        if (this.queue.length) this.dir = this.queue.shift();
+        const h = {x:this.body[0].x + this.dir.x, y:this.body[0].y + this.dir.y};
+        const eats = h.x === this.food.x && h.y === this.food.y;
+        const bodyToCheck = eats ? this.body : this.body.slice(0, -1);
+        if (h.x < 0 || h.y < 0 || h.x >= 20 || h.y >= 15 || bodyToCheck.some(b => b.x === h.x && b.y === h.y)) return gameOver(false);
+        this.body.unshift(h);
+        if (eats){ score += 10; this.speed = Math.max(.06, this.speed - .003); this.food = this.place(); beep(660, .05); }
+        else this.body.pop();
+      }
+    },
+    draw(){
+      ctx.fillStyle = C.tile;
+      for (let y = 0; y < 15; y++) for (let x = 0; x < 20; x++) if ((x + y) % 2) ctx.fillRect(x * 16, y * 16, 16, 16);
+      ctx.fillStyle = C.pink; ctx.fillRect(this.food.x * 16 + 4, this.food.y * 16 + 4, 8, 8);
+      this.body.forEach((b, i) => { ctx.fillStyle = i ? C.mint : "#a8ffe9"; ctx.fillRect(b.x * 16 + 1, b.y * 16 + 1, 14, 14); });
+    }
+  };
+
+  /* ================= game 2: brick blaster ================= */
+  const rowColors = [C.pink, C.orange, C.sun, C.mint, C.violet];
+  const bricks = {
+    name:"Brick Blaster", tags:["Arcade", "Paddle"], score:"1,200",
+    desc:"Bounce the ball to break every brick. Hit the ball with the edge of the paddle to change its angle. Clear the wall for the next level.",
+    controls:[["Move paddle", "← → / mouse / finger"], ["Launch ball", "Space / A / tap"], ["Pause", "P / Start"]],
+    reset(){ this.lives = 3; this.level = 1; this.px = 136; this.build(); this.serve(); },
+    build(){ this.b = []; for (let r = 0; r < 5; r++) for (let c = 0; c < 8; c++) this.b.push({x:6 + c * 39, y:30 + r * 13, w:36, h:10, r}); },
+    serve(){ this.stuck = true; this.vx = 0; this.vy = 0; this.bx = this.px + 24; this.by = 219; },
+    action(){
+      if (!this.stuck) return;
+      const sp = 150 + this.level * 18, a = (Math.random() * .8 - .4);
+      this.vx = sp * Math.sin(a); this.vy = -sp * Math.cos(a); this.stuck = false; beep(440, .05);
+    },
+    update(dt){
+      if (held.left) this.px -= 250 * dt;
+      if (held.right) this.px += 250 * dt;
+      if (ptr) this.px = ptr.x - 24;
+      this.px = clamp(this.px, 0, W - 48);
+      if (this.stuck){ this.bx = this.px + 24; this.by = 219; return; }
+      const steps = Math.ceil(Math.hypot(this.vx, this.vy) * dt / 2);
+      for (let s = 0; s < steps; s++){
+        this.bx += this.vx * dt / steps; this.by += this.vy * dt / steps;
+        if (this.bx < 3){ this.bx = 3; this.vx = Math.abs(this.vx); beep(300, .03); }
+        if (this.bx > W - 3){ this.bx = W - 3; this.vx = -Math.abs(this.vx); beep(300, .03); }
+        if (this.by < 3){ this.by = 3; this.vy = Math.abs(this.vy); beep(300, .03); }
+        if (this.vy > 0 && this.by + 3 >= 224 && this.by + 3 <= 232 && this.bx >= this.px - 3 && this.bx <= this.px + 51){
+          const rel = clamp((this.bx - (this.px + 24)) / 24, -1, 1), sp = Math.min(330, Math.hypot(this.vx, this.vy) * 1.02), a = rel * 1.05;
+          this.vx = sp * Math.sin(a); this.vy = -sp * Math.cos(a); this.by = 220; beep(520, .04);
+        }
+        for (let i = 0; i < this.b.length; i++){
+          const k = this.b[i];
+          if (this.bx + 3 > k.x && this.bx - 3 < k.x + k.w && this.by + 3 > k.y && this.by - 3 < k.y + k.h){
+            const dx = Math.min(this.bx + 3 - k.x, k.x + k.w - (this.bx - 3));
+            const dy = Math.min(this.by + 3 - k.y, k.y + k.h - (this.by - 3));
+            if (dx < dy) this.vx = -this.vx; else this.vy = -this.vy;
+            this.b.splice(i, 1); score += 10 * (5 - k.r); beep(700 - k.r * 60, .04);
+            break;
+          }
+        }
+        if (this.by > H + 6){
+          this.lives--; beep(180, .2, "sawtooth");
+          if (this.lives <= 0) return gameOver(false);
+          return this.serve();
+        }
+      }
+      if (!this.b.length){ this.level++; score += 200; this.build(); this.serve(); [660, 880].forEach((f, i) => setTimeout(() => beep(f, .1), i * 100)); }
+    },
+    draw(){
+      this.b.forEach(k => { ctx.fillStyle = rowColors[k.r]; ctx.fillRect(k.x, k.y, k.w, k.h); ctx.fillStyle = "rgba(255,255,255,.25)"; ctx.fillRect(k.x, k.y, k.w, 2); });
+      ctx.fillStyle = C.mint; ctx.fillRect(Math.round(this.px), 224, 48, 6);
+      ctx.fillStyle = C.ink; ctx.fillRect(Math.round(this.bx) - 3, Math.round(this.by) - 3, 6, 6);
+      for (let i = 0; i < this.lives; i++){ ctx.fillStyle = C.pink; ctx.fillRect(8 + i * 10, 10, 6, 6); }
+      text("LV " + this.level, W - 8, 14, 8, C.soft, "right");
+      if (this.stuck && state === "playing") text("PRESS A TO LAUNCH", W / 2, 180, 8, C.sun);
+    }
+  };
+
+  /* ================= game 3: paddle duel ================= */
+  const duel = {
+    name:"Paddle Duel", tags:["Sports", "vs CPU"], score:"800",
+    desc:"A table-tennis duel against the computer. First to 7 points wins. The ball gets faster with every hit, so stay sharp.",
+    controls:[["Move paddle", "↑ ↓ / mouse / finger"], ["Start", "Space / A"], ["Pause", "P / Start"]],
+    reset(){ this.py = 100; this.cy = 100; this.p = 0; this.c = 0; this.err = 0; this.serve(1); },
+    serve(dir){ this.bx = 158; this.by = 118; this.sp = 170; const a = Math.random() * .7 - .35; this.vx = dir * this.sp * Math.cos(a); this.vy = this.sp * Math.sin(a); this.wait = .8; },
+    bounce(y, dir){
+      const rel = clamp((this.by + 2 - (y + 20)) / 22, -1, 1), a = rel * .9;
+      this.sp = Math.min(360, this.sp + 12);
+      this.vx = dir * this.sp * Math.cos(a); this.vy = this.sp * Math.sin(a);
+      this.bx = dir > 0 ? 18 : 298; this.err = rand(28) - 14;
+      if (dir > 0) score += 10;
+      beep(dir > 0 ? 520 : 440, .04);
+    },
+    update(dt){
+      if (held.up) this.py -= 240 * dt;
+      if (held.down) this.py += 240 * dt;
+      if (ptr) this.py += (ptr.y - 20 - this.py) * Math.min(1, dt * 18);
+      this.py = clamp(this.py, 0, H - 40);
+      const target = this.vx > 0 ? this.by - 18 + this.err : 100, max = 160 * dt;
+      this.cy = clamp(this.cy + clamp(target - this.cy, -max, max), 0, H - 40);
+      if (this.wait > 0){ this.wait -= dt; return; }
+      this.bx += this.vx * dt; this.by += this.vy * dt;
+      if (this.by < 0){ this.by = 0; this.vy = Math.abs(this.vy); beep(300, .03); }
+      if (this.by > H - 4){ this.by = H - 4; this.vy = -Math.abs(this.vy); beep(300, .03); }
+      if (this.vx < 0 && this.bx <= 18 && this.bx >= 6 && this.by + 4 >= this.py && this.by <= this.py + 40) this.bounce(this.py, 1);
+      if (this.vx > 0 && this.bx + 4 >= 302 && this.bx + 4 <= 314 && this.by + 4 >= this.cy && this.by <= this.cy + 40) this.bounce(this.cy, -1);
+      if (this.bx < -8){ this.c++; beep(180, .2, "sawtooth"); if (this.c >= 7) return gameOver(false); this.serve(1); }
+      if (this.bx > W + 8){ this.p++; score += 100; beep(784, .1); if (this.p >= 7) return gameOver(true); this.serve(-1); }
+    },
+    draw(){
+      ctx.fillStyle = C.dim; for (let y = 4; y < H; y += 16) ctx.fillRect(W / 2 - 1, y, 2, 8);
+      text(String(this.p), W / 2 - 40, 26, 16, C.mint); text(String(this.c), W / 2 + 40, 26, 16, C.pink);
+      text("YOU", W / 2 - 40, 46, 8, C.soft); text("CPU", W / 2 + 40, 46, 8, C.soft);
+      ctx.fillStyle = C.mint; ctx.fillRect(12, Math.round(this.py), 6, 40);
+      ctx.fillStyle = C.pink; ctx.fillRect(302, Math.round(this.cy), 6, 40);
+      ctx.fillStyle = C.ink; ctx.fillRect(Math.round(this.bx), Math.round(this.by), 4, 4);
+    }
+  };
+
+  const games = {snake, bricks, duel};
+
+  /* ================= overlays + loop ================= */
+  function overlay(t){
+    if (state === "playing") return;
+    ctx.fillStyle = "rgba(13,11,26,.78)"; ctx.fillRect(0, 0, W, H);
+    const on = Math.floor(t / 500) % 2 === 0;
+    if (state === "title"){
+      text(game.name.toUpperCase(), W / 2, 88, 14, C.sun);
+      if (on) text("PRESS START", W / 2, 130, 8);
+      text("SPACE · TAP · A BUTTON", W / 2, 158, 8, C.soft);
+    }
+    if (state === "paused"){ text("PAUSED", W / 2, 104, 14, C.sun); text("PRESS A TO CONTINUE", W / 2, 140, 8, C.soft); }
+    if (state === "over"){
+      text(game.won ? "YOU WIN!" : "GAME OVER", W / 2, 78, 14, game.won ? C.mint : C.pink);
+      text("SCORE " + score, W / 2, 112, 8);
+      if (newBest) text("NEW BEST!", W / 2, 132, 8, C.sun);
+      if (on) text("PRESS START", W / 2, 166, 8);
+    }
+  }
+  let shownScore = -1, last = performance.now();
+  function loop(t){
+    const dt = Math.min(.05, (t - last) / 1000); last = t;
+    pollPad();
+    if (state === "playing") game.update(dt);
+    ctx.fillStyle = C.bg; ctx.fillRect(0, 0, W, H);
+    game.draw(); overlay(t);
+    if (score !== shownScore){ shownScore = score; document.getElementById("hudScore").textContent = score; }
+    requestAnimationFrame(loop);
+  }
+
+  /* ================= actions ================= */
+  function start(){ score = 0; newBest = false; game.reset(); state = "playing"; beep(520, .08); }
+  function action(){
+    if (state === "title" || state === "over") start();
+    else if (state === "paused") state = "playing";
+    else if (game.action) game.action();
+  }
+  function togglePause(){
+    if (state === "playing") state = "paused";
+    else if (state === "paused") state = "playing";
+  }
+  function select(id){
+    gid = id; game = games[id]; score = 0; newBest = false; game.reset(); state = "title";
+    document.getElementById("hudName").textContent = game.name.toUpperCase();
+    document.getElementById("hudBest").textContent = best[id] || 0;
+    document.getElementById("infoName").textContent = game.name;
+    document.getElementById("infoDesc").textContent = game.desc;
+    document.getElementById("infoControls").innerHTML = game.controls.map(([a, b]) => `<li><span>${a}</span><kbd>${b}</kbd></li>`).join("");
+    document.querySelectorAll("#picker button").forEach(b => b.setAttribute("aria-pressed", b.dataset.g === id));
+  }
+
+  /* ================= input: keyboard ================= */
+  const keyMap = {ArrowLeft:"left", KeyA:"left", ArrowRight:"right", KeyD:"right", ArrowUp:"up", KeyW:"up", ArrowDown:"down", KeyS:"down", Space:"a", Enter:"a", KeyP:"b"};
+  let inView = false;
+  new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (!inView && state === "playing") state = "paused"; }, {threshold:.35}).observe(cv);
+  function press(k){
+    if (k === "a") return action();
+    if (k === "b") return togglePause();
+    ptr = null;
+    if (!held[k] && state === "playing" && game.key) game.key(k);
+    held[k] = true;
+  }
+  function release(k){ if (k in held) held[k] = false; }
+  document.addEventListener("keydown", e => {
+    const k = keyMap[e.code]; if (!k || !inView) return;
+    if (e.target.closest && e.target.closest("button,a,input") && (k === "a")) return; // let Space/Enter click focused buttons
+    e.preventDefault(); if (e.repeat && (k === "a" || k === "b")) return; press(k);
+  });
+  document.addEventListener("keyup", e => { const k = keyMap[e.code]; if (k) release(k); });
+  document.addEventListener("visibilitychange", () => { if (document.hidden && state === "playing") state = "paused"; });
+
+  /* ================= input: touch buttons ================= */
+  document.querySelectorAll(".pad [data-k]").forEach(b => {
+    const k = b.dataset.k;
+    b.addEventListener("pointerdown", e => { e.preventDefault(); b.classList.add("on"); try { b.setPointerCapture(e.pointerId); } catch (x) {} press(k); });
+    const end = () => { b.classList.remove("on"); release(k); };
+    b.addEventListener("pointerup", end); b.addEventListener("pointercancel", end); b.addEventListener("lostpointercapture", end);
+    b.addEventListener("contextmenu", e => e.preventDefault());
+  });
+
+  /* ================= input: mouse / finger on the screen ================= */
+  function setPtr(e){ const r = cv.getBoundingClientRect(); ptr = {x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H}; }
+  cv.addEventListener("pointermove", e => { if (gid !== "snake") setPtr(e); });
+  cv.addEventListener("pointerleave", () => { ptr = null; });
+  cv.addEventListener("pointerdown", e => { if (gid !== "snake") setPtr(e); action(); });
+
+  /* ================= input: gamepad ================= */
+  let padPrev = {};
+  function pollPad(){
+    const list = navigator.getGamepads ? navigator.getGamepads() : [];
+    const p = Array.from(list || []).find(Boolean); if (!p) return;
+    const ax = p.axes[0] || 0, ay = p.axes[1] || 0, btn = i => !!(p.buttons[i] && p.buttons[i].pressed);
+    const now = {left:ax < -.5 || btn(14), right:ax > .5 || btn(15), up:ay < -.5 || btn(12), down:ay > .5 || btn(13), a:btn(0), b:btn(9)};
+    for (const k in now){ if (now[k] && !padPrev[k]) press(k); if (!now[k] && padPrev[k]) release(k); }
+    padPrev = now;
+  }
+
+  /* ================= buttons ================= */
+  document.getElementById("startBtn").onclick = () => { action(); cv.scrollIntoView({block:"center"}); };
+  document.getElementById("pauseBtn").onclick = togglePause;
+  const soundBtn = document.getElementById("soundBtn");
+  soundBtn.onclick = () => { soundOn = !soundOn; soundBtn.textContent = "Sound: " + (soundOn ? "on" : "off"); soundBtn.setAttribute("aria-pressed", soundOn); };
+
+  /* ================= picker + shelf ================= */
+  document.getElementById("picker").innerHTML = Object.entries(games).map(([id, g]) => `<button data-g="${id}" aria-pressed="false">${g.name}</button>`).join("");
+  document.getElementById("picker").addEventListener("click", e => { const b = e.target.closest("[data-g]"); if (b) select(b.dataset.g); });
+
+  const covers = {
+    snake:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[[20,50],[28,50],[36,50],[44,50],[44,42],[44,34],[52,34],[60,34],[68,34]].map(([x,y],i,a)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="${i===a.length-1?"#a8ffe9":"#3ee6c1"}"/>`).join("")}<rect x="88" y="35" width="5" height="5" fill="#ff5c8a"/></svg>`,
+    bricks:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${["#ff5c8a","#ff9b5c","#ffd23f","#3ee6c1"].map((c,r)=>[0,1,2,3,4,5].map(i=>(r===2&&i===3)?"":`<rect x="${6+i*18.5}" y="${10+r*8}" width="16" height="6" fill="${c}"/>`).join("")).join("")}<rect x="64" y="52" width="4" height="4" fill="#f4f1e8"/><rect x="48" y="68" width="26" height="4" fill="#3ee6c1"/></svg>`,
+    duel:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[4,16,28,40,52,64].map(y=>`<rect x="59" y="${y}" width="2" height="7" fill="#3a3462"/>`).join("")}<rect x="12" y="24" width="4" height="22" fill="#3ee6c1"/><rect x="104" y="36" width="4" height="22" fill="#ff5c8a"/><rect x="78" y="30" width="4" height="4" fill="#f4f1e8"/></svg>`,
+    moon:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><circle cx="84" cy="30" r="16" fill="#3a3462"/><rect x="20" y="58" width="80" height="4" fill="#3a3462"/><rect x="40" y="48" width="10" height="10" fill="#9b7bff"/></svg>`,
+    pilot:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="34" y="36" width="40" height="8" fill="#9b7bff"/><rect x="48" y="24" width="8" height="32" fill="#9b7bff"/><rect x="74" y="38" width="6" height="4" fill="#ffd23f"/></svg>`,
+    dungeon:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="36" y="30" width="48" height="36" fill="#3a3462"/><rect x="36" y="22" width="8" height="8" fill="#3a3462"/><rect x="56" y="22" width="8" height="8" fill="#3a3462"/><rect x="76" y="22" width="8" height="8" fill="#3a3462"/><rect x="54" y="48" width="12" height="18" fill="#0d0b1a"/></svg>`
+  };
+  const soon = [
+    {c:"moon", name:"Moon Miner", tags:["Action", "Homebrew"], desc:"Dig through moon rock, collect crystals and race back to your ship before the air runs out."},
+    {c:"pilot", name:"Pixel Pilot", tags:["Shooter", "Homebrew"], desc:"A side-scrolling flight through ten colourful skies, with a boss at the end of each one."},
+    {c:"dungeon", name:"Dungeon Hop", tags:["Puzzle", "Homebrew"], desc:"Jump across moving tiles to find the key in each room. One hundred rooms, zero patience."}
+  ];
+  document.getElementById("shelf").innerHTML =
+    Object.entries(games).map(([id, g]) => `
+      <article class="cart">
+        <div class="cover">${covers[id]}</div>
+        <div class="body">
+          <div class="tags"><span class="live">● Playable</span>${g.tags.map(t => `<span>${t}</span>`).join("")}</div>
+          <h3>${g.name}</h3>
+          <p>${g.desc}</p>
+          <a class="btn small" href="#play" data-play="${id}">▶ Play ${g.name}</a>
+        </div>
+      </article>`).join("") +
+    soon.map(s => `
+      <article class="cart soon" aria-label="${s.name}, coming soon">
+        <div class="cover">${covers[s.c]}</div>
+        <div class="body">
+          <div class="tags"><span>Coming soon</span>${s.tags.map(t => `<span>${t}</span>`).join("")}</div>
+          <h3>${s.name}</h3>
+          <p>${s.desc}</p>
+          <span class="btn small ghost" aria-disabled="true">🔒 Coming soon</span>
+        </div>
+      </article>`).join("");
+  document.getElementById("shelf").addEventListener("click", e => { const a = e.target.closest("[data-play]"); if (a) select(a.dataset.play); });
+
+  /* ================= high-score table ================= */
+  function renderBest(){
+    document.getElementById("bestRows").innerHTML = Object.entries(games).map(([id, g]) =>
+      `<tr><td><b>${g.name}</b></td><td class="num">${best[id] || 0}</td><td>${g.score}</td></tr>`).join("");
+    if (game) document.getElementById("hudBest").textContent = best[gid] || 0;
+  }
+  document.getElementById("clearBest").onclick = () => { best = {}; saveBest(); renderBest(); };
+
+  /* ================= go ================= */
+  select("snake"); renderBest();
+  requestAnimationFrame(loop);
+</script>
+</body>
+</html>
