@@ -100,7 +100,7 @@
 
   .info{background:var(--panel);border:2px solid var(--rule);border-radius:18px;padding:24px}
   .picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:22px}
-  .picker button{background:var(--panel-2);border:2px solid transparent;border-radius:8px;padding:10px 6px;font-size:.85rem;font-weight:700;color:var(--soft)}
+  .picker button{background:var(--panel-2);border:2px solid transparent;border-radius:8px;padding:10px 6px;font-size:.8rem;font-weight:700;color:var(--soft)}
   .picker button[aria-pressed="true"]{border-color:var(--mint);color:var(--ink)}
   .info h3{font-size:.85rem;margin-bottom:10px;color:var(--mint)}
   .info .desc{color:var(--soft);margin-bottom:18px}
@@ -193,7 +193,7 @@
         <a class="btn ghost" href="#how">How it works</a>
       </div>
       <div class="stats">
-        <div><b>3</b>games to play now</div>
+        <div><b>9</b>games to play now</div>
         <div><b>0</b>downloads needed</div>
         <div><b>3</b>ways to play: keys, touch, pad</div>
       </div>
@@ -216,7 +216,7 @@
     <div class="wrap">
       <div class="sec-head">
         <h2>The cartridge shelf</h2>
-        <p>Three games are ready to play. More homebrew titles are on the way.</p>
+        <p>Nine games are ready to play. More homebrew titles are on the way.</p>
       </div>
       <div class="shelf" id="shelf"></div>
     </div>
@@ -304,7 +304,7 @@
       <div class="faq">
         <details><summary>Do I need to install anything?</summary><p>No. Everything runs in your web browser, on a computer, tablet or phone.</p></details>
         <details><summary>Can I play with a controller?</summary><p>Yes. Plug in or pair a gamepad, press any button, and use the stick or d-pad. The A button starts the game, Start pauses it.</p></details>
-        <details><summary>Does it work on my phone?</summary><p>Yes. Use the on-screen buttons, or drag your finger on the screen to move the paddle in Brick Blaster and Paddle Duel.</p></details>
+        <details><summary>Does it work on my phone?</summary><p>Yes. Use the on-screen buttons, drag your finger on the screen in Brick Blaster, Paddle Duel and Sky Hopper, or tap the holes in Mole Panic.</p></details>
         <details><summary>Are my high scores saved?</summary><p>In this demo, they're kept in your browser only. Clearing your browser data removes them.</p></details>
         <details><summary>Can you add famous console games?</summary><p>Only with the right licences. This demo uses original games so there's no copyright problem.</p></details>
       </div>
@@ -362,7 +362,7 @@
 
   /* ================= shared state ================= */
   let gid = "snake", game = null, state = "title", score = 0, newBest = false, ptr = null;
-  const held = {left:false, right:false, up:false, down:false};
+  const held = {left:false, right:false, up:false, down:false, a:false};
   function gameOver(won){
     state = "over"; game.won = !!won;
     newBest = score > (best[gid] || 0);
@@ -411,7 +411,7 @@
   /* ================= game 2: brick blaster ================= */
   const rowColors = [C.pink, C.orange, C.sun, C.mint, C.violet];
   const bricks = {
-    name:"Brick Blaster", tags:["Arcade", "Paddle"], score:"1,200",
+    name:"Brick Blaster", tags:["Arcade", "Paddle"], score:"1,200", usesPtr:true,
     desc:"Bounce the ball to break every brick. Hit the ball with the edge of the paddle to change its angle. Clear the wall for the next level.",
     controls:[["Move paddle", "← → / mouse / finger"], ["Launch ball", "Space / A / tap"], ["Pause", "P / Start"]],
     reset(){ this.lives = 3; this.level = 1; this.px = 136; this.build(); this.serve(); },
@@ -468,7 +468,7 @@
 
   /* ================= game 3: paddle duel ================= */
   const duel = {
-    name:"Paddle Duel", tags:["Sports", "vs CPU"], score:"800",
+    name:"Paddle Duel", tags:["Sports", "vs CPU"], score:"800", usesPtr:true,
     desc:"A table-tennis duel against the computer. First to 7 points wins. The ball gets faster with every hit, so stay sharp.",
     controls:[["Move paddle", "↑ ↓ / mouse / finger"], ["Start", "Space / A"], ["Pause", "P / Start"]],
     reset(){ this.py = 100; this.cy = 100; this.p = 0; this.c = 0; this.err = 0; this.serve(1); },
@@ -507,7 +507,360 @@
     }
   };
 
-  const games = {snake, bricks, duel};
+  /* ================= game 4: copter cave ================= */
+  const copter = {
+    name:"Copter Cave", tags:["Action", "One button"], score:"500",
+    desc:"Hold the button to lift your little copter and let go to drop. Fly as far as you can without touching the cave walls or the floating blocks.",
+    controls:[["Fly up", "Hold Space / A / ↑ / finger"], ["Start", "Space / A"], ["Pause", "P / Start"]],
+    reset(){
+      this.y = 110; this.vy = 0; this.dist = 0; this.s = 0; this.speed = 110; this.top = 30;
+      this.cols = []; for (let i = 0; i < 42; i++) this.cols.push({top:30, bot:190});
+      this.blocks = []; this.bt = 2;
+    },
+    next(){
+      const gap = Math.max(84, 160 - this.dist / 50);
+      this.top = clamp(this.top + rand(13) - 6, 8, H - gap - 8);
+      return {top:this.top, bot:this.top + gap};
+    },
+    update(dt){
+      if (held.a || held.up) this.vy -= 950 * dt;
+      this.vy = clamp(this.vy + 520 * dt, -210, 230);
+      this.y += this.vy * dt;
+      this.speed = Math.min(210, 110 + this.dist / 40);
+      const mv = this.speed * dt; this.dist += mv; this.s += mv;
+      while (this.s >= 8){ this.s -= 8; this.cols.shift(); this.cols.push(this.next()); }
+      this.bt -= dt;
+      if (this.bt <= 0){
+        this.bt = Math.max(.9, 2.2 - this.dist / 3000);
+        const c = this.cols[this.cols.length - 1], h = 26;
+        if (c.bot - c.top > 70) this.blocks.push({x:W + 4, y:c.top + 14 + Math.random() * (c.bot - c.top - h - 28), w:10, h});
+      }
+      this.blocks.forEach(b => b.x -= mv); this.blocks = this.blocks.filter(b => b.x > -20);
+      score = Math.floor(this.dist / 10);
+      const x0 = 60, x1 = 76;
+      for (let i = Math.floor((x0 + this.s) / 8); i <= Math.floor((x1 + this.s) / 8); i++){
+        const c = this.cols[i]; if (c && (this.y < c.top || this.y + 10 > c.bot)) return gameOver(false);
+      }
+      if (this.blocks.some(b => x1 > b.x && x0 < b.x + b.w && this.y + 10 > b.y && this.y < b.y + b.h)) return gameOver(false);
+    },
+    draw(){
+      this.cols.forEach((c, i) => {
+        const x = i * 8 - this.s;
+        ctx.fillStyle = C.violet; ctx.fillRect(x, 0, 8, c.top); ctx.fillRect(x, c.bot, 8, H - c.bot);
+        ctx.fillStyle = "#c4b2ff"; ctx.fillRect(x, c.top - 2, 8, 2); ctx.fillRect(x, c.bot, 8, 2);
+      });
+      ctx.fillStyle = C.pink; this.blocks.forEach(b => ctx.fillRect(Math.round(b.x), Math.round(b.y), b.w, b.h));
+      const y = Math.round(this.y);
+      ctx.fillStyle = C.sun; ctx.fillRect(62, y + 1, 14, 8); ctx.fillRect(52, y + 3, 10, 3);
+      ctx.fillStyle = C.mint; ctx.fillRect(70, y + 2, 5, 4);
+      const r = Math.floor(performance.now() / 60) % 2 ? 18 : 10;
+      ctx.fillStyle = C.ink; ctx.fillRect(69 - r / 2, y - 2, r, 2); ctx.fillRect(63, y + 10, 12, 1);
+    }
+  };
+
+  /* ================= game 5: gold hook ================= */
+  const gold = {
+    name:"Gold Hook", tags:["Arcade", "Timing"], score:"1,500",
+    desc:"Your hook swings left and right. Drop it at the right moment to grab gold and gems before time runs out. Rocks are heavy and slow to pull up, so be picky.",
+    controls:[["Drop hook", "Space / A / ↓ / tap"], ["Start", "Space / A"], ["Pause", "P / Start"]],
+    reset(){ this.level = 1; this.target = 400; this.round(); },
+    round(){
+      this.time = 45; this.t = 0; this.a = 0; this.state = "swing"; this.len = 14; this.grab = null; this.msg = 1.6;
+      this.tx = W / 2; this.ty = 48; this.items = [];
+      const kinds = [["big", 15, 300, 3.2, C.sun], ["small", 8, 100, 1.5, C.sun], ["rock", 13, 20, 4, "#6b6688"], ["gem", 5, 450, 1, C.mint]];
+      const plan = [0, 0, 1, 1, 1, 1, 2, 2, 2, 3]; if (this.level > 1) plan.push(3, 2, 1);
+      plan.forEach(k => {
+        const [kind, r, val, w, col] = kinds[k]; let x, y, tries = 0;
+        do { x = 20 + r + Math.random() * (W - 40 - 2 * r); y = 95 + r + Math.random() * (H - 105 - 2 * r); tries++; }
+        while (tries < 40 && this.items.some(i => Math.hypot(i.x - x, i.y - y) < i.r + r + 8));
+        this.items.push({kind, r, val, w, col, x, y});
+      });
+    },
+    action(){ if (this.state === "swing"){ this.state = "out"; beep(380, .04); } },
+    key(k){ if (k === "down") this.action(); },
+    update(dt){
+      if (this.msg > 0) this.msg -= dt;
+      this.time -= dt;
+      if (this.time <= 0){
+        this.time = 0;
+        if (score >= this.target){
+          this.level++; this.target += 400 + this.level * 150; this.round();
+          [660, 880].forEach((f, i) => setTimeout(() => beep(f, .1), i * 100)); return;
+        }
+        return gameOver(false);
+      }
+      if (this.state === "swing"){ this.t += dt; this.a = Math.sin(this.t * 1.9) * 1.2; }
+      if (this.state === "out") this.len += 240 * dt;
+      if (this.state === "back") this.len -= (this.grab ? 300 / this.grab.w : 340) * dt;
+      this.tx = W / 2 + Math.sin(this.a) * this.len; this.ty = 34 + Math.cos(this.a) * this.len;
+      if (this.state === "out"){
+        const hit = this.items.find(i => Math.hypot(i.x - this.tx, i.y - this.ty) < i.r + 3);
+        if (hit){ this.grab = hit; this.state = "back"; beep(hit.kind === "rock" ? 160 : 520, .06); }
+        else if (this.tx < 0 || this.tx > W || this.ty > H) this.state = "back";
+      }
+      if (this.grab){ this.grab.x = this.tx; this.grab.y = this.ty + this.grab.r - 2; }
+      if (this.state === "back" && this.len <= 14){
+        this.len = 14;
+        if (this.grab){ score += this.grab.val; this.items = this.items.filter(i => i !== this.grab); this.grab = null; beep(880, .06); }
+        this.state = "swing";
+      }
+      if (!this.items.length && this.state === "swing") this.time = Math.min(this.time, .01);
+    },
+    draw(){
+      ctx.fillStyle = "#2a1f3d"; ctx.fillRect(0, 44, W, H - 44);
+      ctx.fillStyle = "#3a2c52"; for (let i = 0; i < 40; i++) ctx.fillRect((i * 53) % W, (i * 37) % (H - 50) + 50, 3, 3);
+      ctx.fillStyle = C.mint; ctx.fillRect(0, 40, W, 4);
+      ctx.fillStyle = C.pink; ctx.fillRect(W / 2 - 10, 18, 20, 14);
+      ctx.fillStyle = C.sun; ctx.fillRect(W / 2 - 6, 10, 12, 8);
+      this.items.forEach(i => {
+        ctx.fillStyle = i.col;
+        if (i.kind === "gem"){ ctx.beginPath(); ctx.moveTo(i.x, i.y - i.r - 2); ctx.lineTo(i.x + i.r + 1, i.y); ctx.lineTo(i.x, i.y + i.r + 2); ctx.lineTo(i.x - i.r - 1, i.y); ctx.fill(); }
+        else {
+          ctx.beginPath(); ctx.arc(i.x, i.y, i.r, 0, Math.PI * 2); ctx.fill();
+          if (i.kind !== "rock"){ ctx.fillStyle = "rgba(255,255,255,.45)"; ctx.fillRect(i.x - i.r / 2, i.y - i.r / 2, 3, 3); }
+        }
+      });
+      ctx.strokeStyle = C.soft; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(W / 2, 34); ctx.lineTo(this.tx, this.ty); ctx.stroke();
+      ctx.fillStyle = C.ink; ctx.fillRect(this.tx - 3, this.ty - 1, 6, 3);
+      text("TIME " + Math.ceil(this.time), 8, 12, 8, C.soft, "left");
+      text("LV " + this.level, 8, 28, 8, C.soft, "left");
+      text("GOAL " + this.target, W - 8, 12, 8, C.sun, "right");
+      if (this.msg > 0 && state === "playing") text("LEVEL " + this.level + " · GOAL " + this.target, W / 2, 70, 8, C.sun);
+    }
+  };
+
+  /* ================= game 6: rooftop dash ================= */
+  const dash = {
+    name:"Rooftop Dash", tags:["Runner", "One button"], score:"800",
+    desc:"Run across the city rooftops and jump over the gaps. Hold the button longer for a higher jump. The city speeds up the further you go.",
+    controls:[["Jump", "Space / A / ↑ / tap"], ["Higher jump", "Hold the button"], ["Pause", "P / Start"]],
+    reset(){
+      this.y = 134; this.vy = 0; this.ground = true; this.speed = 150; this.dist = 0;
+      this.roofs = [{x:0, w:260, y:150}]; while (this.roofs.length < 6) this.addRoof();
+      this.stars = Array.from({length:30}, () => ({x:rand(W), y:rand(110), s:1 + rand(2)}));
+    },
+    addRoof(){
+      const l = this.roofs[this.roofs.length - 1], gap = 28 + Math.random() * (26 + this.speed / 6);
+      this.roofs.push({x:l.x + l.w + gap, w:70 + rand(110), y:clamp(l.y + rand(70) - 40, 110, 205)});
+    },
+    action(){ if (this.ground){ this.vy = -390; this.ground = false; beep(560, .05); } },
+    key(k){ if (k === "up") this.action(); },
+    update(dt){
+      this.speed = Math.min(330, 150 + this.dist / 45);
+      const mv = this.speed * dt; this.dist += mv; score = Math.floor(this.dist / 10);
+      this.roofs.forEach(r => r.x -= mv);
+      if (this.roofs[0].x + this.roofs[0].w < -10){ this.roofs.shift(); this.addRoof(); }
+      this.stars.forEach(s => { s.x -= mv * .1 * s.s; if (s.x < 0) s.x += W; });
+      const prevFeet = this.y + 16;
+      if (!held.a && !held.up && this.vy < -150) this.vy = -150;
+      this.vy += 1150 * dt; this.y += this.vy * dt;
+      const feet = this.y + 16, x0 = 50, x1 = 62;
+      this.ground = false;
+      for (const r of this.roofs){
+        if (x1 > r.x && x0 < r.x + r.w){
+          if (this.vy >= 0 && prevFeet <= r.y + 1 && feet >= r.y){ this.y = r.y - 16; this.vy = 0; this.ground = true; }
+          else if (feet > r.y + 3 && this.y < H){ beep(150, .2, "sawtooth"); return gameOver(false); }
+        }
+      }
+      if (this.y > H + 20) return gameOver(false);
+    },
+    draw(){
+      this.stars.forEach(s => { ctx.fillStyle = s.s > 1 ? C.soft : C.dim; ctx.fillRect(Math.round(s.x), s.y, s.s, s.s); });
+      ctx.fillStyle = C.sun; ctx.fillRect(250, 26, 16, 16); ctx.fillStyle = C.bg; ctx.fillRect(256, 23, 14, 14);
+      this.roofs.forEach(r => {
+        const x = Math.round(r.x);
+        ctx.fillStyle = "#2a2550"; ctx.fillRect(x, r.y, r.w, H - r.y);
+        ctx.fillStyle = C.violet; ctx.fillRect(x, r.y, r.w, 4);
+        ctx.fillStyle = "rgba(255,210,63,.35)";
+        for (let wy = r.y + 14; wy < H - 6; wy += 16) for (let wx = 8; wx < r.w - 10; wx += 16) if ((wx * 7 + wy * 3) % 5 < 2) ctx.fillRect(x + wx, wy, 6, 8);
+      });
+      const y = Math.round(this.y), f = Math.floor(this.dist / 12) % 2;
+      ctx.fillStyle = C.mint; ctx.fillRect(52, y, 8, 8);
+      ctx.fillStyle = C.bg; ctx.fillRect(57, y + 2, 2, 2);
+      ctx.fillStyle = C.pink; ctx.fillRect(50, y + 8, 12, 5);
+      ctx.fillStyle = C.ink;
+      if (this.ground){ ctx.fillRect(f ? 51 : 54, y + 13, 3, 3); ctx.fillRect(f ? 57 : 55, y + 13, 3, 3); }
+      else { ctx.fillRect(50, y + 13, 3, 3); ctx.fillRect(59, y + 12, 3, 3); }
+    }
+  };
+
+  /* ================= game 7: sky hopper ================= */
+  const hopper = {
+    name:"Sky Hopper", tags:["Platform", "Endless"], score:"1,000", usesPtr:true,
+    desc:"Bounce from cloud to cloud and climb as high as you can. Yellow clouds move, so time your jumps. Walk off one side of the screen to come back on the other.",
+    controls:[["Move", "← → / mouse / finger"], ["Start", "Space / A"], ["Pause", "P / Start"]],
+    reset(){
+      this.height = 0; this.x = 154; this.y = 190; this.vy = -420; this.face = 1;
+      this.plats = [{x:130, y:214, w:60, vx:0}];
+      let y = 214; while (y > -20){ y -= 34 + rand(16); this.plats.push(this.mk(y)); }
+    },
+    mk(y){
+      const hard = Math.min(1, this.height / 6000);
+      return {x:rand(W - 44), y, w:44 - Math.round(hard * 10), vx:Math.random() < .15 + hard * .3 ? (Math.random() < .5 ? -1 : 1) * (40 + hard * 60) : 0};
+    },
+    update(dt){
+      let dx = 0; if (held.left) dx -= 1; if (held.right) dx += 1;
+      if (dx) this.face = dx;
+      if (ptr){ const d = ptr.x - (this.x + 6); this.x += clamp(d, -200 * dt, 200 * dt); if (Math.abs(d) > 2) this.face = Math.sign(d); }
+      else this.x += dx * 190 * dt;
+      if (this.x < -12) this.x += W + 12;
+      if (this.x > W) this.x -= W + 12;
+      const prev = this.y + 12;
+      this.vy += 880 * dt; this.y += this.vy * dt;
+      this.plats.forEach(p => { if (p.vx){ p.x += p.vx * dt; if (p.x < 0 || p.x + p.w > W) p.vx = -p.vx; } });
+      if (this.vy > 0){
+        const bottom = this.y + 12;
+        for (const p of this.plats){
+          if (prev <= p.y && bottom >= p.y && this.x + 10 > p.x && this.x + 2 < p.x + p.w){ this.y = p.y - 12; this.vy = -420; beep(600, .04, "triangle", .06); break; }
+        }
+      }
+      if (this.y < 110){ const sh = 110 - this.y; this.y = 110; this.height += sh; this.plats.forEach(p => p.y += sh); }
+      this.plats = this.plats.filter(p => p.y < H + 10);
+      let top = Math.min(...this.plats.map(p => p.y));
+      const spread = Math.round(14 + Math.min(40, this.height / 150));
+      while (top > -20){ top -= 26 + rand(spread); this.plats.push(this.mk(top)); }
+      score = Math.floor(this.height / 10);
+      if (this.y > H) return gameOver(false);
+    },
+    draw(){
+      this.plats.forEach(p => {
+        const x = Math.round(p.x), y = Math.round(p.y);
+        ctx.fillStyle = p.vx ? C.sun : C.ink; ctx.fillRect(x + 2, y, p.w - 4, 6); ctx.fillRect(x, y + 2, p.w, 3);
+        ctx.fillStyle = "rgba(13,11,26,.25)"; ctx.fillRect(x + 2, y + 5, p.w - 4, 1);
+      });
+      const x = Math.round(this.x), y = Math.round(this.y);
+      ctx.fillStyle = C.mint; ctx.fillRect(x, y, 12, 10);
+      ctx.fillStyle = C.bg; ctx.fillRect(this.face > 0 ? x + 7 : x + 3, y + 3, 2, 2);
+      ctx.fillStyle = C.pink; ctx.fillRect(x + 1, y + 10, 4, 2); ctx.fillRect(x + 7, y + 10, 4, 2);
+    }
+  };
+
+  /* ================= game 8: mole panic ================= */
+  const holes = []; for (let r = 0; r < 3; r++) for (let c = 0; c < 3; c++) holes.push({x:70 + c * 90, y:84 + r * 58});
+  const mole = {
+    name:"Mole Panic", tags:["Reflex", "Tap"], score:"400", usesPtr:true, overText:"TIME UP",
+    desc:"Moles keep popping out of their holes. Bop as many as you can in 40 seconds, but watch out: hitting a pink bomb costs you 30 points.",
+    controls:[["Aim", "Arrows / tap a hole"], ["Bop", "Space / A / tap"], ["Pause", "P / Start"]],
+    reset(){ this.time = 40; this.cur = 4; this.m = holes.map(() => ({up:0, t:0, bomb:false, hit:0})); this.spawn = .6; this.fx = 0; },
+    key(k){
+      const c = this.cur % 3, r = Math.floor(this.cur / 3);
+      if (k === "left" && c > 0) this.cur--;
+      if (k === "right" && c < 2) this.cur++;
+      if (k === "up" && r > 0) this.cur -= 3;
+      if (k === "down" && r < 2) this.cur += 3;
+    },
+    action(){
+      if (ptr){ const i = holes.findIndex(h => Math.abs(ptr.x - h.x) < 40 && Math.abs(ptr.y - h.y) < 28); if (i < 0) return; this.cur = i; }
+      this.fx = .12; const m = this.m[this.cur];
+      if (m.up > .4 && !m.hit){
+        m.hit = .3;
+        if (m.bomb){ score = Math.max(0, score - 30); beep(150, .2, "sawtooth"); } else { score += 10; beep(760, .05); }
+      } else beep(220, .03);
+    },
+    update(dt){
+      this.time -= dt; if (this.time <= 0){ this.time = 0; return gameOver(false); }
+      if (this.fx > 0) this.fx -= dt;
+      const pace = 1 - Math.min(.5, (40 - this.time) / 80);
+      this.spawn -= dt;
+      if (this.spawn <= 0){
+        this.spawn = .55 * pace + Math.random() * .3;
+        const free = this.m.map((m, i) => m.t <= 0 && m.up <= 0 && !m.hit ? i : -1).filter(i => i >= 0);
+        if (free.length){ const m = this.m[free[rand(free.length)]]; m.t = 1.1 * pace + .3; m.bomb = Math.random() < .18; }
+      }
+      this.m.forEach(m => {
+        if (m.hit > 0){ m.hit -= dt; m.up = Math.max(0, m.up - dt * 5); if (m.hit <= 0){ m.hit = 0; m.t = 0; m.up = 0; } return; }
+        if (m.t > 0){ m.t -= dt; m.up = Math.min(1, m.up + dt * 7); } else m.up = Math.max(0, m.up - dt * 7);
+      });
+    },
+    draw(){
+      ctx.fillStyle = "#1d3a2f"; ctx.fillRect(0, 40, W, H - 40);
+      text("TIME " + Math.ceil(this.time), 8, 16, 8, C.soft, "left");
+      holes.forEach((h, i) => {
+        const m = this.m[i];
+        ctx.fillStyle = "#0a1a14"; ctx.beginPath(); ctx.ellipse(h.x, h.y + 10, 26, 8, 0, 0, Math.PI * 2); ctx.fill();
+        if (m.up > 0 || m.hit){
+          const rise = Math.round(m.up * 24);
+          ctx.save(); ctx.beginPath(); ctx.rect(h.x - 30, h.y - 44, 60, 54); ctx.clip();
+          if (m.bomb){
+            ctx.fillStyle = C.pink; ctx.beginPath(); ctx.arc(h.x, h.y + 14 - rise, 11, 0, Math.PI * 2); ctx.fill();
+            ctx.fillStyle = C.sun; ctx.fillRect(h.x + 5, h.y - rise - 2, 3, 5);
+            if (m.hit) text("-30", h.x, h.y - 32, 8, C.pink);
+          } else {
+            ctx.fillStyle = m.hit ? C.soft : C.violet; ctx.fillRect(h.x - 12, h.y + 4 - rise, 24, 24); ctx.fillRect(h.x - 10, h.y + 2 - rise, 20, 2);
+            ctx.fillStyle = C.bg; ctx.fillRect(h.x - 6, h.y + 10 - rise, 3, 3); ctx.fillRect(h.x + 3, h.y + 10 - rise, 3, 3);
+            ctx.fillStyle = C.pink; ctx.fillRect(h.x - 2, h.y + 15 - rise, 4, 3);
+            if (m.hit) text("+10", h.x, h.y - 32, 8, C.sun);
+          }
+          ctx.restore();
+        }
+      });
+      const c = holes[this.cur];
+      ctx.strokeStyle = C.sun; ctx.lineWidth = 2; ctx.strokeRect(c.x - 32, c.y - 30, 64, 52);
+      if (this.fx > 0){ ctx.fillStyle = C.sun; ctx.fillRect(c.x - 14, c.y - 36, 28, 8); }
+    }
+  };
+
+  /* ================= game 9: tank duel ================= */
+  const tank = {
+    name:"Tank Duel", tags:["Shooter", "vs CPU"], score:"600",
+    desc:"Your tank faces the computer's tank across a brick wall. Blast through the bricks and land 3 hits before it hits you 3 times.",
+    controls:[["Move", "← → / A D"], ["Fire", "Space / A / ↑ / tap"], ["Pause", "P / Start"]],
+    reset(){
+      this.px = 152; this.cx = 152; this.plives = 3; this.clives = 3; this.shots = [];
+      this.cool = 0; this.ccool = 1.2; this.pflash = 0; this.cflash = 0;
+      this.bricks = []; for (let r = 0; r < 3; r++) for (let c = 0; c < 20; c++) if (!(c % 5 === 2 && r === 1)) this.bricks.push({x:c * 16, y:104 + r * 10});
+    },
+    fire(who){
+      if (who === "p"){ if (this.cool > 0) return; this.cool = .45; this.shots.push({x:this.px + 7, y:198, vy:-260, who}); beep(330, .05); }
+      else { this.ccool = .9 + Math.random() * .9; this.shots.push({x:this.cx + 7, y:42, vy:230, who}); beep(260, .05); }
+    },
+    action(){ this.fire("p"); },
+    key(k){ if (k === "up") this.fire("p"); },
+    update(dt){
+      if (held.left) this.px -= 150 * dt;
+      if (held.right) this.px += 150 * dt;
+      this.px = clamp(this.px, 4, W - 20);
+      this.cool -= dt; this.ccool -= dt;
+      if (this.pflash > 0) this.pflash -= dt;
+      if (this.cflash > 0) this.cflash -= dt;
+      const danger = this.shots.find(s => s.who === "p" && s.y < 120 && Math.abs(s.x - (this.cx + 8)) < 14);
+      const target = danger ? this.cx + (danger.x < this.cx + 8 ? 40 : -40) : this.px + Math.sin(performance.now() / 700) * 30;
+      this.cx = clamp(this.cx + clamp(target - this.cx, -120 * dt, 120 * dt), 4, W - 20);
+      if (this.ccool <= 0 && Math.abs(this.cx - this.px) < 50) this.fire("c");
+      this.shots.forEach(s => s.y += s.vy * dt);
+      for (const s of this.shots){
+        const bi = this.bricks.findIndex(b => s.x + 3 > b.x && s.x < b.x + 15 && s.y + 5 > b.y && s.y < b.y + 9);
+        if (bi >= 0){ this.bricks.splice(bi, 1); s.dead = true; beep(200, .03); continue; }
+        if (s.who === "p" && s.y < 44 && s.y > 22 && s.x + 3 > this.cx && s.x < this.cx + 16){
+          s.dead = true; this.clives--; score += 100; this.cflash = .4; beep(880, .1);
+          if (this.clives <= 0){ score += this.plives * 100; return gameOver(true); }
+        }
+        if (s.who === "c" && s.y > 198 && s.y < 220 && s.x + 3 > this.px && s.x < this.px + 16){
+          s.dead = true; this.plives--; this.pflash = .4; beep(150, .2, "sawtooth");
+          if (this.plives <= 0) return gameOver(false);
+        }
+      }
+      this.shots = this.shots.filter(s => !s.dead && s.y > -10 && s.y < H + 10);
+    },
+    draw(){
+      ctx.fillStyle = "#18152e"; for (let x = 0; x < W; x += 20) ctx.fillRect(x, 0, 1, H);
+      this.bricks.forEach(b => { ctx.fillStyle = C.orange; ctx.fillRect(b.x, b.y, 15, 9); ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.fillRect(b.x, b.y + 7, 15, 2); });
+      const drawTank = (x, y, col, up, hit) => {
+        x = Math.round(x); const c = hit > 0 && Math.floor(hit * 20) % 2 ? C.ink : col;
+        ctx.fillStyle = C.dim; ctx.fillRect(x - 1, y + 2, 3, 12); ctx.fillRect(x + 14, y + 2, 3, 12);
+        ctx.fillStyle = c; ctx.fillRect(x, y + 3, 16, 10); ctx.fillRect(x + 7, up ? y - 4 : y + 12, 2, 8);
+        ctx.fillStyle = "rgba(0,0,0,.25)"; ctx.fillRect(x + 4, y + 5, 8, 6);
+      };
+      drawTank(this.px, 202, C.mint, true, this.pflash);
+      drawTank(this.cx, 26, C.pink, false, this.cflash);
+      this.shots.forEach(s => { ctx.fillStyle = s.who === "p" ? C.mint : C.pink; ctx.fillRect(Math.round(s.x), Math.round(s.y), 3, 5); });
+      for (let i = 0; i < this.plives; i++){ ctx.fillStyle = C.mint; ctx.fillRect(8 + i * 10, H - 12, 6, 6); }
+      for (let i = 0; i < this.clives; i++){ ctx.fillStyle = C.pink; ctx.fillRect(W - 14 - i * 10, 8, 6, 6); }
+      text("YOU", 48, H - 9, 8, C.soft, "left"); text("CPU", W - 50, 11, 8, C.soft, "right");
+    }
+  };
+
+  const games = {snake, bricks, duel, copter, gold, dash, hopper, mole, tank};
 
   /* ================= overlays + loop ================= */
   function overlay(t){
@@ -521,7 +874,7 @@
     }
     if (state === "paused"){ text("PAUSED", W / 2, 104, 14, C.sun); text("PRESS A TO CONTINUE", W / 2, 140, 8, C.soft); }
     if (state === "over"){
-      text(game.won ? "YOU WIN!" : "GAME OVER", W / 2, 78, 14, game.won ? C.mint : C.pink);
+      text(game.won ? "YOU WIN!" : (game.overText || "GAME OVER"), W / 2, 78, 14, game.won ? C.mint : C.pink);
       text("SCORE " + score, W / 2, 112, 8);
       if (newBest) text("NEW BEST!", W / 2, 132, 8, C.sun);
       if (on) text("PRESS START", W / 2, 166, 8);
@@ -550,6 +903,7 @@
     else if (state === "paused") state = "playing";
   }
   function select(id){
+    Object.keys(held).forEach(k => held[k] = false); ptr = null;
     gid = id; game = games[id]; score = 0; newBest = false; game.reset(); state = "title";
     document.getElementById("hudName").textContent = game.name.toUpperCase();
     document.getElementById("hudBest").textContent = best[id] || 0;
@@ -564,7 +918,7 @@
   let inView = false;
   new IntersectionObserver(([e]) => { inView = e.isIntersecting; if (!inView && state === "playing") state = "paused"; }, {threshold:.35}).observe(cv);
   function press(k){
-    if (k === "a") return action();
+    if (k === "a"){ held.a = true; return action(); }
     if (k === "b") return togglePause();
     ptr = null;
     if (!held[k] && state === "playing" && game.key) game.key(k);
@@ -590,9 +944,10 @@
 
   /* ================= input: mouse / finger on the screen ================= */
   function setPtr(e){ const r = cv.getBoundingClientRect(); ptr = {x:(e.clientX - r.left) / r.width * W, y:(e.clientY - r.top) / r.height * H}; }
-  cv.addEventListener("pointermove", e => { if (gid !== "snake") setPtr(e); });
-  cv.addEventListener("pointerleave", () => { ptr = null; });
-  cv.addEventListener("pointerdown", e => { if (gid !== "snake") setPtr(e); action(); });
+  cv.addEventListener("pointermove", e => { if (game.usesPtr) setPtr(e); });
+  cv.addEventListener("pointerleave", () => { ptr = null; held.a = false; });
+  cv.addEventListener("pointerdown", e => { if (game.usesPtr) setPtr(e); held.a = true; try { cv.setPointerCapture(e.pointerId); } catch (x) {} action(); });
+  ["pointerup", "pointercancel"].forEach(ev => cv.addEventListener(ev, () => { held.a = false; }));
 
   /* ================= input: gamepad ================= */
   let padPrev = {};
@@ -619,6 +974,12 @@
     snake:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[[20,50],[28,50],[36,50],[44,50],[44,42],[44,34],[52,34],[60,34],[68,34]].map(([x,y],i,a)=>`<rect x="${x}" y="${y}" width="7" height="7" fill="${i===a.length-1?"#a8ffe9":"#3ee6c1"}"/>`).join("")}<rect x="88" y="35" width="5" height="5" fill="#ff5c8a"/></svg>`,
     bricks:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${["#ff5c8a","#ff9b5c","#ffd23f","#3ee6c1"].map((c,r)=>[0,1,2,3,4,5].map(i=>(r===2&&i===3)?"":`<rect x="${6+i*18.5}" y="${10+r*8}" width="16" height="6" fill="${c}"/>`).join("")).join("")}<rect x="64" y="52" width="4" height="4" fill="#f4f1e8"/><rect x="48" y="68" width="26" height="4" fill="#3ee6c1"/></svg>`,
     duel:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[4,16,28,40,52,64].map(y=>`<rect x="59" y="${y}" width="2" height="7" fill="#3a3462"/>`).join("")}<rect x="12" y="24" width="4" height="22" fill="#3ee6c1"/><rect x="104" y="36" width="4" height="22" fill="#ff5c8a"/><rect x="78" y="30" width="4" height="4" fill="#f4f1e8"/></svg>`,
+    copter:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[14,10,12,8,6,10,14,12,9,7,11,13].map((h,i)=>`<rect x="${i*10}" y="0" width="10" height="${h}" fill="#9b7bff"/><rect x="${i*10}" y="${66-h/2}" width="10" height="${14+h/2}" fill="#9b7bff"/>`).join("")}<rect x="82" y="30" width="10" height="20" fill="#ff5c8a"/><rect x="30" y="38" width="12" height="6" fill="#ffd23f"/><rect x="22" y="40" width="8" height="2" fill="#ffd23f"/><rect x="36" y="39" width="4" height="3" fill="#3ee6c1"/><rect x="28" y="35" width="16" height="1" fill="#f4f1e8"/></svg>`,
+    gold:`<svg viewBox="0 0 120 80"><rect width="120" height="80" fill="#2a1f3d"/><rect width="120" height="16" fill="#0d0b1a"/><rect y="14" width="120" height="3" fill="#3ee6c1"/><rect x="54" y="2" width="12" height="10" fill="#ff5c8a"/><line x1="60" y1="12" x2="78" y2="52" stroke="#b9b4d0"/><circle cx="80" cy="58" r="8" fill="#ffd23f"/><circle cx="30" cy="50" r="10" fill="#ffd23f"/><circle cx="98" cy="34" r="5" fill="#ffd23f"/><circle cx="50" cy="66" r="7" fill="#6b6688"/><path d="M18 30l5 6-5 6-5-6z" fill="#3ee6c1"/></svg>`,
+    dash:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="92" y="10" width="10" height="10" fill="#ffd23f"/><rect x="96" y="8" width="9" height="9" fill="#0d0b1a"/><rect x="0" y="52" width="44" height="28" fill="#2a2550"/><rect x="0" y="52" width="44" height="2" fill="#9b7bff"/><rect x="62" y="44" width="58" height="36" fill="#2a2550"/><rect x="62" y="44" width="58" height="2" fill="#9b7bff"/><rect x="8" y="60" width="4" height="5" fill="#ffd23f" opacity=".5"/><rect x="26" y="66" width="4" height="5" fill="#ffd23f" opacity=".5"/><rect x="76" y="54" width="4" height="5" fill="#ffd23f" opacity=".5"/><rect x="100" y="62" width="4" height="5" fill="#ffd23f" opacity=".5"/><rect x="48" y="28" width="6" height="6" fill="#3ee6c1"/><rect x="47" y="34" width="8" height="4" fill="#ff5c8a"/><rect x="46" y="38" width="2" height="2" fill="#f4f1e8"/><rect x="54" y="37" width="2" height="2" fill="#f4f1e8"/></svg>`,
+    hopper:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="14" y="66" width="30" height="4" fill="#f4f1e8"/><rect x="66" y="50" width="30" height="4" fill="#ffd23f"/><rect x="24" y="32" width="30" height="4" fill="#f4f1e8"/><rect x="74" y="14" width="30" height="4" fill="#f4f1e8"/><rect x="40" y="18" width="8" height="7" fill="#3ee6c1"/><rect x="45" y="20" width="2" height="2" fill="#0d0b1a"/><rect x="41" y="25" width="2" height="2" fill="#ff5c8a"/><rect x="45" y="25" width="2" height="2" fill="#ff5c8a"/></svg>`,
+    mole:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#1d3a2f"/>${[[24,30],[60,30],[96,30],[24,64],[60,64],[96,64]].map(([x,y],i)=>`<ellipse cx="${x}" cy="${y}" rx="13" ry="4" fill="#0a1a14"/>${i===1||i===5?`<rect x="${x-7}" y="${y-14}" width="14" height="14" fill="#9b7bff"/><rect x="${x-4}" y="${y-10}" width="2" height="2" fill="#0d0b1a"/><rect x="${x+2}" y="${y-10}" width="2" height="2" fill="#0d0b1a"/>`:""}${i===3?`<circle cx="${x}" cy="${y-6}" r="6" fill="#ff5c8a"/>`:""}`).join("")}</svg>`,
+    tank:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/>${[0,1,2,3,4,5,6,7,8,9].map(i=>i===4?"":`<rect x="${i*12}" y="36" width="11" height="7" fill="#ff9b5c"/>`).join("")}<rect x="20" y="62" width="14" height="9" fill="#3ee6c1"/><rect x="26" y="54" width="2" height="8" fill="#3ee6c1"/><rect x="84" y="9" width="14" height="9" fill="#ff5c8a"/><rect x="90" y="18" width="2" height="8" fill="#ff5c8a"/><rect x="26" y="46" width="2" height="4" fill="#3ee6c1"/></svg>`,
     moon:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><circle cx="84" cy="30" r="16" fill="#3a3462"/><rect x="20" y="58" width="80" height="4" fill="#3a3462"/><rect x="40" y="48" width="10" height="10" fill="#9b7bff"/></svg>`,
     pilot:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="34" y="36" width="40" height="8" fill="#9b7bff"/><rect x="48" y="24" width="8" height="32" fill="#9b7bff"/><rect x="74" y="38" width="6" height="4" fill="#ffd23f"/></svg>`,
     dungeon:`<svg viewBox="0 0 120 80" shape-rendering="crispEdges"><rect width="120" height="80" fill="#0d0b1a"/><rect x="36" y="30" width="48" height="36" fill="#3a3462"/><rect x="36" y="22" width="8" height="8" fill="#3a3462"/><rect x="56" y="22" width="8" height="8" fill="#3a3462"/><rect x="76" y="22" width="8" height="8" fill="#3a3462"/><rect x="54" y="48" width="12" height="18" fill="#0d0b1a"/></svg>`
