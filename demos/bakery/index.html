@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Local Makers Demo</title>
+<meta name="description" content="Demo website for local goods producers — bakeries, butchers and food artisans. Built by Farias IT Services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fbf6ee; --surface:#ffffff; --ink:#2b2118; --muted:#6f6254;
+    --accent:#c0782e; --accent-dark:#8f5418; --soft:#f3e4cf; --line:#e8dccb;
+    --radius:18px;
+  }
+  body.butcher{
+    --bg:#f8f4f1; --ink:#251a1a; --muted:#6d5c5a;
+    --accent:#a3312f; --accent-dark:#741f1d; --soft:#f1dedb; --line:#e6d5d2;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,sans-serif;line-height:1.6;transition:background .4s,color .4s}
+  h1,h2,h3{font-family:Fraunces,Georgia,serif;line-height:1.15;margin:0 0 .5em}
+  a{color:inherit}
+  .wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+
+  /* demo switcher */
+  .demo-bar{background:var(--ink);color:#fff;font-size:.85rem;text-align:center;padding:8px 16px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .demo-bar button{border:1px solid #ffffff55;background:transparent;color:#fff;padding:4px 12px;border-radius:99px;cursor:pointer;font:inherit}
+  .demo-bar button.on{background:#fff;color:var(--ink)}
+
+  header{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+  .nav{display:flex;align-items:center;justify-content:space-between;height:64px}
+  .logo{font-family:Fraunces,serif;font-weight:700;font-size:1.35rem;text-decoration:none;display:flex;gap:8px;align-items:center}
+  .logo span{font-size:1.5rem}
+  .nav ul{list-style:none;display:flex;gap:24px;margin:0;padding:0}
+  .nav ul a{text-decoration:none;color:var(--muted);font-weight:500}
+  .nav ul a:hover{color:var(--accent)}
+  .btn{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;padding:12px 22px;border-radius:99px;font-weight:600;border:0;cursor:pointer;font:inherit;font-weight:600;transition:background .2s}
+  .btn:hover{background:var(--accent-dark)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.ghost:hover{background:var(--ink);color:#fff}
+
+  .hero{padding:72px 0 56px}
+  .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+  .eyebrow{color:var(--accent);font-weight:600;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.6rem)}
+  .hero p{color:var(--muted);font-size:1.1rem;max-width:34em}
+  .hero .actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
+  .hero-art{aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0,var(--soft) 60%);display:grid;place-items:center;font-size:clamp(6rem,18vw,11rem);box-shadow:inset 0 0 0 14px #ffffff88}
+  .badges{display:flex;gap:20px;margin-top:28px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+  .badges b{display:block;color:var(--ink);font-family:Fraunces,serif;font-size:1.4rem}
+
+  section{padding:64px 0}
+  .section-head{text-align:center;max-width:620px;margin:0 auto 36px}
+  .section-head p{color:var(--muted)}
+  .section-head h2{font-size:clamp(1.8rem,3.5vw,2.5rem)}
+
+  .filters{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-bottom:28px}
+  .filters button{border:1px solid var(--line);background:var(--surface);padding:8px 16px;border-radius:99px;cursor:pointer;font:inherit;color:var(--muted)}
+  .filters button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:20px}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 10px 30px #0000000d}
+  .card .pic{height:120px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:3.5rem;margin-bottom:14px}
+  .card h3{font-size:1.15rem;margin-bottom:4px}
+  .card p{color:var(--muted);font-size:.92rem;margin:0 0 14px;flex:1}
+  .card .row{display:flex;justify-content:space-between;align-items:center}
+  .price{font-weight:600;font-size:1.05rem}
+  .add{background:var(--soft);color:var(--accent-dark);border:0;border-radius:99px;padding:7px 14px;cursor:pointer;font:inherit;font-weight:600}
+  .add:hover{background:var(--accent);color:#fff}
+  .tag{font-size:.72rem;font-weight:600;color:var(--accent);text-transform:uppercase;letter-spacing:.06em}
+
+  .process{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;counter-reset:s}
+  .step{text-align:center}
+  .step .ico{width:72px;height:72px;margin:0 auto 12px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-size:2rem}
+  .step h3{font-size:1.1rem}
+  .step p{color:var(--muted);font-size:.92rem;margin:0}
+
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .about-art{border-radius:var(--radius);background:var(--soft);aspect-ratio:4/3;display:grid;place-items:center;font-size:7rem}
+  .about p{color:var(--muted)}
+  .quote{border-left:3px solid var(--accent);padding-left:16px;font-family:Fraunces,serif;font-size:1.15rem;color:var(--ink);margin:24px 0}
+
+  .order{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+  .panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px}
+  .basket-list{list-style:none;padding:0;margin:0 0 16px}
+  .basket-list li{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line);gap:8px}
+  .basket-list .qty{display:flex;align-items:center;gap:8px}
+  .basket-list .qty button{width:26px;height:26px;border-radius:50%;border:1px solid var(--line);background:var(--bg);cursor:pointer}
+  .empty{color:var(--muted);font-style:italic}
+  .total{display:flex;justify-content:space-between;font-weight:600;font-size:1.1rem}
+  label{display:block;font-size:.88rem;font-weight:500;margin:12px 0 4px}
+  input,select,textarea{width:100%;padding:11px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;background:var(--bg);color:var(--ink)}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .note{font-size:.82rem;color:var(--muted);margin-top:10px}
+  .thanks{display:none;text-align:center;padding:30px 10px}
+  .thanks .big{font-size:3rem}
+
+  .visit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .visit-grid .panel h3{font-size:1.15rem}
+  .hours{width:100%;border-collapse:collapse;font-size:.92rem}
+  .hours td{padding:4px 0;border-bottom:1px solid var(--line)}
+  .hours td:last-child{text-align:right;color:var(--muted)}
+  .open-now{display:inline-block;margin-top:10px;font-size:.82rem;font-weight:600;padding:4px 10px;border-radius:99px}
+
+  footer{background:var(--ink);color:#ffffffcc;padding:36px 0;font-size:.88rem}
+  footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+  footer a{color:#fff}
+
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(100px);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:.9rem;transition:transform .3s;z-index:50}
+  .toast.show{transform:translateX(-50%) translateY(0)}
+
+  @media (max-width:820px){
+    .nav ul{display:none}
+    .hero-grid,.about-grid,.order{grid-template-columns:1fr}
+    .hero-art{max-width:280px;margin:0 auto}
+    .steps{grid-template-columns:1fr 1fr}
+    .visit-grid{grid-template-columns:1fr}
+  }
+  @media (max-width:480px){ .steps,.two{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">
+  <span>Demo by Farias IT Services · Try another business:</span>
+  <button data-biz="bakery" class="on">🥖 Bakery</button>
+  <button data-biz="butcher">🥩 Butcher</button>
+</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo"><span id="logoIcon">🥖</span><b id="brand">Golden Crust</b></a>
+    <ul>
+      <li><a href="#products">Products</a></li>
+      <li><a href="#process">How we make it</a></li>
+      <li><a href="#about">Our story</a></li>
+      <li><a href="#visit">Visit</a></li>
+    </ul>
+    <a href="#order" class="btn">Pre-order</a>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow" id="heroEyebrow"></div>
+        <h1 id="heroTitle"></h1>
+        <p id="heroText"></p>
+        <div class="actions">
+          <a href="#order" class="btn">Order for pick-up</a>
+          <a href="#products" class="btn ghost">See today's selection</a>
+        </div>
+        <div class="badges" id="badges"></div>
+      </div>
+      <div class="hero-art" id="heroArt" aria-hidden="true"></div>
+    </div>
+  </section>
+
+  <section id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="prodTitle"></h2>
+        <p id="prodText"></p>
+      </div>
+      <div class="filters" id="filters"></div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </section>
+
+  <section id="process" class="process">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>How we make it</h2>
+        <p id="procText"></p>
+      </div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about-grid about">
+      <div class="about-art" id="aboutArt" aria-hidden="true"></div>
+      <div>
+        <div class="eyebrow">Our story</div>
+        <h2 id="aboutTitle"></h2>
+        <p id="aboutText"></p>
+        <div class="quote" id="aboutQuote"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="order">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Pre-order &amp; pick up</h2>
+        <p>Add items from the shop above, choose a pick-up time, and we'll have it ready for you.</p>
+      </div>
+      <div class="order">
+        <div class="panel">
+          <h3>Your basket</h3>
+          <ul class="basket-list" id="basket"></ul>
+          <div class="total"><span>Total</span><span id="total">€0.00</span></div>
+          <p class="note">You pay in the shop when you pick up. No online payment needed.</p>
+        </div>
+        <div class="panel">
+          <form id="orderForm">
+            <h3>Pick-up details</h3>
+            <label for="name">Name</label>
+            <input id="name" required placeholder="Your name">
+            <div class="two">
+              <div><label for="phone">Phone</label><input id="phone" type="tel" required placeholder="+32 ..."></div>
+              <div><label for="email">Email</label><input id="email" type="email" placeholder="you@email.com"></div>
+            </div>
+            <div class="two">
+              <div><label for="day">Day</label><input id="day" type="date" required></div>
+              <div><label for="time">Time</label>
+                <select id="time" required><option>08:00 – 10:00</option><option>10:00 – 12:00</option><option>12:00 – 14:00</option><option>14:00 – 17:00</option></select>
+              </div>
+            </div>
+            <label for="notes">Notes (optional)</label>
+            <textarea id="notes" rows="3" placeholder=""></textarea>
+            <button class="btn" style="margin-top:16px;width:100%">Send pre-order</button>
+            <p class="note">This is a demo — no order is actually sent.</p>
+          </form>
+          <div class="thanks" id="thanks">
+            <div class="big">✅</div>
+            <h3>Thank you!</h3>
+            <p>Your pre-order is noted. In a real site you'd get a confirmation by email or WhatsApp.</p>
+            <button class="btn ghost" id="again">New order</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="visit">
+    <div class="wrap">
+      <div class="section-head"><h2>Come visit</h2></div>
+      <div class="visit-grid">
+        <div class="panel">
+          <h3>📍 Address</h3>
+          <p id="address"></p>
+          <p class="note">Free parking in front of the shop.</p>
+        </div>
+        <div class="panel">
+          <h3>🕐 Opening hours</h3>
+          <table class="hours" id="hours"></table>
+          <span class="open-now" id="openNow"></span>
+        </div>
+        <div class="panel">
+          <h3>📞 Contact</h3>
+          <p>Phone: +32 16 00 00 00<br>Email: hello@example.com</p>
+          <p class="note">Catering and large orders: please contact us 3 days ahead.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© <span id="year"></span> <span id="brandFoot"></span> · Fictional business for demonstration</span>
+    <span>Website by <a href="#">Farias IT Services</a></span>
+  </div>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = {
+  bakery:{
+    brand:"Golden Crust", icon:"🥖",
+    eyebrow:"Artisan bakery · Since 1998",
+    title:"Bread baked fresh every morning, the slow way.",
+    text:"Sourdough, butter croissants and family-recipe cakes — made by hand with local flour, long fermentation and zero shortcuts.",
+    art:"🥐",
+    badges:[["48h","sourdough fermentation"],["100%","local flour"],["5 am","first loaves out"]],
+    prodTitle:"Today's selection", prodText:"Baked in small batches. Pre-order to make sure your favourites are waiting for you.",
+    cats:["Bread","Pastries","Cakes"],
+    products:[
+      ["Country Sourdough","Bread","🍞","Crispy crust, open crumb, 48-hour ferment.",4.80],
+      ["Seeded Rye","Bread","🥖","Dark rye with sunflower and flax seeds.",5.20],
+      ["Baguette","Bread","🥖","Classic French, baked three times a day.",1.90],
+      ["Butter Croissant","Pastries","🥐","Laminated with Belgian butter, 27 layers.",1.60],
+      ["Pain au Chocolat","Pastries","🥐","Two bars of dark chocolate inside.",1.80],
+      ["Cinnamon Roll","Pastries","🧁","Soft brioche dough, brown sugar glaze.",2.40],
+      ["Apple Tart","Cakes","🥧","Grandma's recipe with seasonal apples.",18.00],
+      ["Chocolate Cake","Cakes","🎂","Rich and moist, serves 8 people.",24.00]
+    ],
+    procText:"From flour to your table, everything happens here in our own workshop.",
+    steps:[["🌾","Choose","Flour from farms within 50 km."],["🫙","Ferment","Natural starter, up to 48 hours."],["👐","Shape","Every loaf shaped by hand."],["🔥","Bake","Stone oven, fresh each morning."]],
+    aboutArt:"👩‍🍳", aboutTitle:"A family bakery on the corner",
+    aboutText:"What started as a small oven in a garage is now the neighbourhood's favourite bakery. We still use the same sourdough starter from day one — and we still know most of our customers by name.",
+    quote:"“Good bread needs only flour, water, salt and time. We never rush the time.”",
+    notesPh:"e.g. Please slice the sourdough",
+    address:"Market Street 12<br>3000 Leuven, Belgium",
+    hours:[["Mon","Closed"],["Tue – Fri","07:00 – 18:00"],["Saturday","07:00 – 17:00"],["Sunday","07:00 – 13:00"]],
+    open:[null,null,[7,18],[7,18],[7,18],[7,18],[7,17]], sun:[7,13]
+  },
+  butcher:{
+    brand:"Oak & Cleaver", icon:"🥩",
+    eyebrow:"Craft butcher · Third generation",
+    title:"Quality meat from farms we know by name.",
+    text:"Dry-aged beef, homemade sausages and ready-to-cook specials — cut to order by butchers who care where your food comes from.",
+    art:"🥩",
+    badges:[["28 days","dry-aged beef"],["6","partner farms"],["0","artificial additives"]],
+    prodTitle:"Our counter", prodText:"Cut fresh to order. Tell us the thickness or weight you need in the notes.",
+    cats:["Beef","Pork & Poultry","Homemade"],
+    products:[
+      ["Ribeye Steak","Beef","🥩","Dry-aged 28 days, ~300 g.",12.50],
+      ["Minced Beef","Beef","🍖","Lean, minced fresh, per 500 g.",7.90],
+      ["Beef Stew Cubes","Beef","🍲","Perfect for stoofvlees, per kg.",16.00],
+      ["Pork Chops","Pork & Poultry","🍖","Free-range pork, 2 pieces.",8.40],
+      ["Whole Chicken","Pork & Poultry","🍗","Farm chicken, ~1.6 kg.",13.90],
+      ["Herb Sausages","Homemade","🌭","Our own recipe, pack of 4.",6.80],
+      ["Meatballs in Tomato","Homemade","🧆","Ready to heat, serves 2.",9.50],
+      ["BBQ Box","Homemade","🔥","Mixed meats for 4 people.",39.00]
+    ],
+    procText:"We follow the meat from the farm to the counter — that's how we guarantee quality.",
+    steps:[["🐄","Source","Small farms, animals raised outdoors."],["❄️","Age","Dry-aged in our own cold room."],["🔪","Cut","Cut to order by hand."],["📦","Prepare","Homemade sausages and dishes daily."]],
+    aboutArt:"👨‍🍳", aboutTitle:"Three generations behind the counter",
+    aboutText:"Our grandfather opened the shop with one knife and one promise: only sell meat you'd serve your own family. Today we still visit every farm we work with.",
+    quote:"“Ask us anything — how to cook it, how long, what wine goes with it.”",
+    notesPh:"e.g. Ribeye 3 cm thick, please",
+    address:"Station Road 45<br>3000 Leuven, Belgium",
+    hours:[["Mon","Closed"],["Tue – Fri","08:30 – 18:30"],["Saturday","08:00 – 17:00"],["Sunday","Closed"]],
+    open:[null,null,[8.5,18.5],[8.5,18.5],[8.5,18.5],[8.5,18.5],[8,17]], sun:null
+  }
+};
+
+let biz = "bakery", filter = "All", basket = {};
+const $ = id => document.getElementById(id);
+const eur = n => "€" + n.toFixed(2);
+
+function render(){
+  const d = DATA[biz];
+  document.body.className = biz === "butcher" ? "butcher" : "";
+  $("brand").textContent = d.brand; $("brandFoot").textContent = d.brand; $("logoIcon").textContent = d.icon;
+  $("heroEyebrow").textContent = d.eyebrow; $("heroTitle").textContent = d.title; $("heroText").textContent = d.text;
+  $("heroArt").textContent = d.art;
+  $("badges").innerHTML = d.badges.map(b => `<div><b>${b[0]}</b>${b[1]}</div>`).join("");
+  $("prodTitle").textContent = d.prodTitle; $("prodText").textContent = d.prodText;
+  $("procText").textContent = d.procText;
+  $("steps").innerHTML = d.steps.map(s => `<div class="step"><div class="ico">${s[0]}</div><h3>${s[1]}</h3><p>${s[2]}</p></div>`).join("");
+  $("aboutArt").textContent = d.aboutArt; $("aboutTitle").textContent = d.aboutTitle;
+  $("aboutText").textContent = d.aboutText; $("aboutQuote").textContent = d.quote;
+  $("notes").placeholder = d.notesPh;
+  $("address").innerHTML = d.address;
+  $("hours").innerHTML = d.hours.map(h => `<tr><td>${h[0]}</td><td>${h[1]}</td></tr>`).join("");
+  document.title = d.brand + " — Demo";
+  renderFilters(); renderGrid(); renderBasket(); renderOpen();
+}
+
+function renderFilters(){
+  const cats = ["All", ...DATA[biz].cats];
+  $("filters").innerHTML = cats.map(c => `<button class="${c===filter?'on':''}" data-c="${c}">${c}</button>`).join("");
+}
+function renderGrid(){
+  const items = DATA[biz].products.filter(p => filter==="All" || p[1]===filter);
+  $("grid").innerHTML = items.map(p => `
+    <div class="card">
+      <div class="pic" aria-hidden="true">${p[2]}</div>
+      <span class="tag">${p[1]}</span>
+      <h3>${p[0]}</h3>
+      <p>${p[3]}</p>
+      <div class="row"><span class="price">${eur(p[4])}</span><button class="add" data-n="${p[0]}">+ Add</button></div>
+    </div>`).join("");
+}
+function renderBasket(){
+  const prods = DATA[biz].products, names = Object.keys(basket);
+  if(!names.length){ $("basket").innerHTML = `<li class="empty">Your basket is empty — add something from the shop.</li>`; $("total").textContent = eur(0); return; }
+  let total = 0;
+  $("basket").innerHTML = names.map(n => {
+    const p = prods.find(x => x[0]===n), q = basket[n]; total += p[4]*q;
+    return `<li><span>${p[2]} ${n}</span><span class="qty"><button data-m="${n}" aria-label="Remove one">−</button>${q}<button data-p="${n}" aria-label="Add one">+</button><b style="min-width:62px;text-align:right">${eur(p[4]*q)}</b></span></li>`;
+  }).join("");
+  $("total").textContent = eur(total);
+}
+function renderOpen(){
+  const d = DATA[biz], now = new Date(), day = now.getDay(), h = now.getHours() + now.getMinutes()/60;
+  const slot = day===0 ? d.sun : d.open[day];
+  const isOpen = slot && h >= slot[0] && h < slot[1];
+  const el = $("openNow");
+  el.textContent = isOpen ? "● Open now" : "● Closed right now";
+  el.style.background = isOpen ? "#dff3e3" : "var(--soft)";
+  el.style.color = isOpen ? "#256b36" : "var(--muted)";
+}
+function toast(msg){ const t=$("toast"); t.textContent=msg; t.classList.add("show"); clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove("show"),1800); }
+
+document.querySelectorAll(".demo-bar button").forEach(b => b.onclick = () => {
+  document.querySelectorAll(".demo-bar button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on"); biz = b.dataset.biz; filter = "All"; basket = {}; render();
+});
+$("filters").onclick = e => { if(e.target.dataset.c){ filter = e.target.dataset.c; renderFilters(); renderGrid(); } };
+$("grid").onclick = e => { const n = e.target.dataset.n; if(n){ basket[n]=(basket[n]||0)+1; renderBasket(); toast(`Added: ${n}`); } };
+$("basket").onclick = e => {
+  const {m,p} = e.target.dataset;
+  if(p) basket[p]++;
+  if(m){ basket[m]--; if(basket[m]<=0) delete basket[m]; }
+  if(m||p) renderBasket();
+};
+$("orderForm").onsubmit = e => {
+  e.preventDefault();
+  if(!Object.keys(basket).length){ toast("Add at least one item first 🙂"); location.hash="products"; return; }
+  $("orderForm").style.display="none"; $("thanks").style.display="block";
+};
+$("again").onclick = () => { basket={}; renderBasket(); $("orderForm").reset(); $("orderForm").style.display=""; $("thanks").style.display="none"; };
+
+const tomorrow = new Date(Date.now()+864e5).toISOString().slice(0,10);
+$("day").min = tomorrow; $("day").value = tomorrow;
+$("year").textContent = new Date().getFullYear();
+render();
+</script>
+</body>
+</html>
