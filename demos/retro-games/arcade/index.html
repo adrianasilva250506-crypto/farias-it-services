@@ -57,6 +57,8 @@
   .card:hover{transform:translateY(-3px);border-color:var(--violet)}
   .thumb{position:relative;aspect-ratio:16/10;background:var(--panel-2);overflow:hidden}
   .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .ph{display:none;position:absolute;inset:0;place-items:center;padding:12px;text-align:center;font:400 .62rem/1.6 var(--pixel);color:var(--sun);background:repeating-linear-gradient(45deg,#252142 0 10px,#1f1b3a 10px 20px)}
+  .thumb.noimg .ph{display:grid}
   .thumb .play{position:absolute;inset:0;display:grid;place-items:center;background:rgba(13,11,26,.45);opacity:0;transition:opacity .15s;font:400 .7rem var(--pixel);color:var(--ink)}
   .card:hover .play,.card:focus-visible .play{opacity:1}
   .card .body{padding:12px 14px 14px}
@@ -173,7 +175,7 @@
     document.getElementById("count").textContent = `${list.length} game${list.length === 1 ? "" : "s"}`;
     document.getElementById("grid").innerHTML = list.length ? list.map(g => `
       <button class="card" data-i="${g.i}" aria-label="Play ${esc(g.t)}">
-        <div class="thumb"><img src="${esc(g.img)}" alt="" loading="lazy" decoding="async"><span class="play">▶ PLAY</span></div>
+        <div class="thumb"><img src="${esc(g.img)}" alt="" loading="lazy" decoding="async" onerror="this.parentNode.classList.add('noimg');this.remove()"><span class="ph">${esc(g.t)}</span><span class="play">▶ PLAY</span></div>
         <div class="body"><div class="cat">${CATS[g.c]}</div><h3>${esc(g.t)}</h3><p>${esc(g.d)}</p></div>
       </button>`).join("") : `<p class="empty">No games match that search. Try another word!</p>`;
   }
