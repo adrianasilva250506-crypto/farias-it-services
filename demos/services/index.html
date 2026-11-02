@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FixPoint — Computer &amp; Phone Repair</title>
+<meta name="description" content="Friendly computer and phone repair for homes and small offices. Demo service business website by Farias IT Services.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#f6faf8; --card:#ffffff; --ink:#10201d; --soft:#4b5f5a; --muted:#7c8d89;
+    --teal:#0f766e; --teal-2:#0b5d56; --mint:#e3f2ee; --rule:#d7e5e1; --sun:#f2b33d; --wa:#25d366;
+    --head:"Bricolage Grotesque",system-ui,sans-serif; --sans:"DM Sans",system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+  body{font-family:var(--sans);font-size:1.03rem;line-height:1.6;color:var(--ink);background:var(--paper)}
+  a{color:inherit}
+  button{font:inherit;cursor:pointer}
+  :focus-visible{outline:3px solid var(--sun);outline-offset:2px}
+  h1,h2,h3{font-family:var(--head);line-height:1.1;letter-spacing:-.02em}
+  .wrap{max-width:1140px;margin:0 auto;padding:0 24px}
+  .sr{position:absolute;left:-9999px}
+
+  .demo-bar{background:var(--mint);color:var(--soft);font-size:.82rem;text-align:center;padding:8px 16px}
+  .demo-bar a{color:var(--teal);font-weight:700}
+
+  /* header */
+  header{background:rgba(246,250,248,.94);backdrop-filter:blur(6px);border-bottom:1px solid var(--rule);position:sticky;top:0;z-index:30}
+  .nav{display:flex;align-items:center;gap:36px;height:70px}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;font:800 1.3rem var(--head)}
+  .nav ul{display:flex;gap:26px;list-style:none;font-weight:500;font-size:.95rem}
+  .nav ul a{text-decoration:none;color:var(--soft)}
+  .nav ul a:hover{color:var(--teal)}
+  .nav .btn{margin-left:auto}
+  .menu-btn{display:none;background:none;border:1px solid var(--rule);border-radius:8px;padding:8px 10px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:12px 20px;font-weight:700;font-size:.95rem;text-decoration:none}
+  .btn:hover{background:var(--teal-2)}
+  .btn.line{background:transparent;color:var(--ink);border:1.5px solid var(--ink)}
+  .btn.line:hover{background:var(--mint)}
+  .btn.wa{background:var(--wa);color:#0b2b17}
+  .btn.wa:hover{background:#1fbd5a}
+
+  /* hero */
+  .hero{display:grid;grid-template-columns:1.1fr 1fr;gap:48px;align-items:center;padding:60px 0 70px}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--rule);border-radius:999px;padding:6px 14px;font-size:.85rem;font-weight:500;color:var(--soft);margin-bottom:18px}
+  .pill i{width:8px;height:8px;border-radius:50%;background:#22a06b;display:block}
+  .hero h1{font-size:clamp(2.4rem,5vw,3.9rem);font-weight:800;margin-bottom:18px}
+  .hero h1 em{font-style:normal;color:var(--teal)}
+  .hero p{font-size:1.15rem;color:var(--soft);max-width:31em;margin-bottom:28px}
+  .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .stats{display:flex;gap:36px;flex-wrap:wrap;margin-top:36px}
+  .stats b{display:block;font:800 1.8rem var(--head);color:var(--ink)}
+  .stats span{font-size:.9rem;color:var(--soft)}
+  .hero-art{background:var(--mint);border-radius:28px;aspect-ratio:1/1;max-height:480px;display:grid;place-items:center;position:relative;overflow:hidden}
+  .hero-art svg{width:82%;height:auto}
+  .float{position:absolute;background:var(--card);border-radius:14px;padding:12px 16px;font-size:.85rem;box-shadow:0 8px 24px rgba(16,32,29,.1)}
+  .float b{display:block;font-family:var(--head);font-size:1rem}
+  .f1{left:18px;bottom:22px}
+  .f2{right:18px;top:22px}
+
+  section{padding:76px 0;border-top:1px solid var(--rule)}
+  .sec-head{max-width:620px;margin-bottom:38px}
+  .kicker{font-weight:700;font-size:.85rem;color:var(--teal);margin-bottom:8px;display:block}
+  .sec-head h2{font-size:clamp(1.8rem,3.2vw,2.5rem);font-weight:800;margin-bottom:10px}
+  .sec-head p{color:var(--soft)}
+
+  /* services */
+  .services{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .svc{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:26px;display:flex;flex-direction:column}
+  .ico{width:48px;height:48px;border-radius:12px;background:var(--mint);display:grid;place-items:center;margin-bottom:16px}
+  .svc h3{font-size:1.2rem;margin-bottom:6px}
+  .svc p{color:var(--soft);font-size:.96rem;flex:1}
+  .svc .from{margin-top:14px;font-size:.9rem;color:var(--soft)}
+  .svc .from b{color:var(--ink);font-size:1.05rem}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+  .steps div{position:relative;padding-top:56px}
+  .steps div::before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;width:42px;height:42px;border-radius:50%;background:var(--ink);color:#fff;display:grid;place-items:center;font:800 1.1rem var(--head)}
+  .steps h3{font-size:1.15rem;margin-bottom:6px}
+  .steps p{color:var(--soft);font-size:.97rem}
+
+  /* pricing */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;align-items:stretch}
+  .plan{background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:30px;display:flex;flex-direction:column}
+  .plan.best{background:var(--ink);color:#e6f0ed;border-color:var(--ink);position:relative}
+  .plan.best .badge{position:absolute;top:-13px;left:30px;background:var(--sun);color:var(--ink);font-weight:700;font-size:.78rem;border-radius:999px;padding:4px 12px}
+  .plan h3{font-size:1.25rem}
+  .plan .for{font-size:.9rem;color:var(--muted);margin:4px 0 18px}
+  .plan.best .for{color:#9fb8b2}
+  .amount{font:800 2.6rem var(--head);line-height:1}
+  .amount small{font:500 .9rem var(--sans);color:var(--muted)}
+  .plan ul{list-style:none;margin:22px 0 26px;flex:1}
+  .plan li{padding:7px 0 7px 28px;position:relative;font-size:.95rem;border-bottom:1px solid var(--rule)}
+  .plan.best li{border-color:#26403b}
+  .plan li::before{content:"";position:absolute;left:0;top:11px;width:16px;height:16px;border-radius:50%;background:var(--mint) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230f766e' stroke-width='3.5'%3E%3Cpath d='m6 12.5 4 4 8-9'/%3E%3C/svg%3E") center/10px no-repeat}
+  .plan.best .btn{background:var(--sun);color:var(--ink)}
+  .plan.best .btn:hover{background:#e3a429}
+  .price-list{margin-top:40px;background:var(--card);border:1px solid var(--rule);border-radius:18px;overflow:hidden}
+  .price-list h3{font-size:1.15rem;padding:20px 24px;border-bottom:1px solid var(--rule)}
+  .pl-row{display:flex;justify-content:space-between;gap:16px;padding:14px 24px;border-bottom:1px solid var(--rule);font-size:.96rem}
+  .pl-row:last-child{border-bottom:0}
+  .pl-row span{color:var(--soft)}
+  .pl-row b{white-space:nowrap}
+  .fine{font-size:.85rem;color:var(--muted);margin-top:14px}
+
+  /* about */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center}
+  .about p{color:var(--soft);margin-bottom:14px}
+  .team{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .person{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:24px;text-align:center}
+  .avatar{width:76px;height:76px;border-radius:50%;margin:0 auto 14px;display:grid;place-items:center;font:800 1.5rem var(--head);color:#fff}
+  .person h3{font-size:1.1rem}
+  .person span{font-size:.88rem;color:var(--soft)}
+  .values{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+  .values span{background:var(--mint);color:var(--teal-2);font-weight:700;font-size:.85rem;border-radius:999px;padding:6px 14px}
+
+  /* reviews */
+  .quotes{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+  .quote{background:var(--card);border:1px solid var(--rule);border-radius:18px;padding:26px}
+  .quote .stars{color:var(--sun);letter-spacing:2px;margin-bottom:10px}
+  .quote p{font-size:1rem}
+  .quote cite{display:block;margin-top:14px;font-size:.85rem;color:var(--muted);font-style:normal}
+
+  /* faq */
+  .faq{max-width:760px}
+  .faq details{border-bottom:1px solid var(--rule);padding:18px 0}
+  .faq summary{font:600 1.08rem var(--head);cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:16px}
+  .faq summary::-webkit-details-marker{display:none}
+  .faq summary::after{content:"+";font-size:1.4rem;line-height:1;color:var(--teal)}
+  .faq details[open] summary::after{content:"–"}
+  .faq details p{color:var(--soft);margin-top:10px}
+
+  /* contact */
+  .contact{display:grid;grid-template-columns:1fr 1.2fr;gap:40px;align-items:start}
+  .info{background:var(--ink);color:#d6e4e0;border-radius:20px;padding:32px}
+  .info h3{color:#fff;font-size:1.4rem;margin-bottom:10px}
+  .info .item{display:flex;gap:14px;padding:14px 0;border-top:1px solid #26403b}
+  .info .item svg{flex:none;margin-top:3px}
+  .info .item b{display:block;color:#fff}
+  .info .btn{margin-top:18px;width:100%}
+  form.card{background:var(--card);border:1px solid var(--rule);border-radius:20px;padding:30px}
+  .fields{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .full{grid-column:1/-1}
+  label{display:block;font-size:.86rem;font-weight:700;margin-bottom:6px}
+  input,select,textarea{width:100%;font:inherit;font-size:.97rem;padding:12px 14px;border:1px solid var(--rule);border-radius:10px;background:#fff;color:var(--ink)}
+  textarea{min-height:120px;resize:vertical}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(15,118,110,.15)}
+  .chips{display:flex;gap:8px;flex-wrap:wrap}
+  .chips label{margin:0;font-weight:500;font-size:.9rem;border:1px solid var(--rule);border-radius:999px;padding:7px 14px;cursor:pointer;display:flex;gap:8px;align-items:center}
+  .chips input{width:auto;accent-color:var(--teal)}
+  .chips label:has(input:checked){border-color:var(--teal);background:var(--mint)}
+  .form-foot{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:20px}
+  .form-foot small{color:var(--muted)}
+  .err{color:#b3402f;font-weight:700;font-size:.9rem;margin-top:12px}
+  .sent{text-align:center;padding:40px 10px}
+  .sent .tick{width:64px;height:64px;border-radius:50%;background:var(--teal);display:grid;place-items:center;margin:0 auto 16px}
+  .sent h3{font-size:1.5rem;margin-bottom:6px}
+  .sent p{color:var(--soft)}
+  [hidden]{display:none!important}
+
+  /* floating whatsapp */
+  .wa-float{position:fixed;right:20px;bottom:20px;z-index:40;width:60px;height:60px;border-radius:50%;background:var(--wa);border:0;display:grid;place-items:center;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+  .wa-float:hover{transform:scale(1.06)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,140px);background:var(--ink);color:#fff;padding:12px 20px;border-radius:999px;font-size:.9rem;z-index:60;transition:transform .3s;max-width:calc(100% - 120px);text-align:center}
+  .toast.show{transform:translate(-50%,0)}
+
+  footer{background:var(--ink);color:#b5c7c2;font-size:.9rem;padding:52px 0 30px;margin-top:20px}
+  .f-grid{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:30px;margin-bottom:32px}
+  footer h4{color:#fff;font-family:var(--head);margin-bottom:10px}
+  footer ul{list-style:none}
+  footer a{text-decoration:none}
+  footer a:hover{color:#fff}
+  .f-bottom{border-top:1px solid #26403b;padding-top:20px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+
+  @media (max-width:960px){
+    .hero,.about,.contact{grid-template-columns:1fr}
+    .services,.quotes{grid-template-columns:1fr 1fr}
+    .plans,.steps{grid-template-columns:1fr}
+    .plan.best{order:-1}
+    .f-grid{grid-template-columns:1fr 1fr}
+    .hero-art{max-height:380px}
+  }
+  @media (max-width:720px){
+    .nav{gap:12px}
+    .nav ul{display:none;position:absolute;top:70px;left:0;right:0;flex-direction:column;gap:0;background:#fff;border-bottom:1px solid var(--rule)}
+    .nav ul.open{display:flex}
+    .nav ul a{display:block;padding:14px 24px}
+    .menu-btn{display:block}
+    .nav .btn{padding:10px 14px;font-size:.88rem}
+  }
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    .services,.quotes,.fields,.team{grid-template-columns:1fr}
+    .stats{gap:22px}
+    form.card,.info{padding:22px}
+    .f-grid{grid-template-columns:1fr}
+    .float.f2{display:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="demo-bar">Demo website by <a href="../../">Farias IT Services</a>. The business, people, prices and reviews are examples.</div>
+
+<header>
+  <div class="wrap nav">
+    <a href="#" class="logo" aria-label="FixPoint home">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#0f766e"/><path d="M19.5 8.5a4.5 4.5 0 0 0-5.6 5.6l-6 6a1.8 1.8 0 0 0 2.6 2.6l6-6a4.5 4.5 0 0 0 5.6-5.6l-2.7 2.7-2.4-.2-.2-2.4z" fill="#fff"/><circle cx="24" cy="24" r="3" fill="#f2b33d"/></svg>
+      FixPoint
+    </a>
+    <ul id="menu">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#prices">Prices</a></li>
+      <li><a href="#about">About us</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a class="btn" href="#contact">Book a repair</a>
+    <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-controls="menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <div class="wrap hero">
+    <div>
+      <span class="pill"><i></i>Open today until 18:00</span>
+      <h1>Broken laptop? Slow phone? <em>We fix it.</em></h1>
+      <p>Friendly computer and phone repair for homes and small offices. Clear prices up front, most repairs done the same day, and no fix means no fee.</p>
+      <div class="cta">
+        <a class="btn" href="#contact">Get a free quote</a>
+        <button class="btn wa" data-wa>
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 13.6c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+          Chat on WhatsApp
+        </button>
+      </div>
+      <div class="stats">
+        <div><b>2,400+</b><span>devices repaired</span></div>
+        <div><b>4.9 ★</b><span>average rating</span></div>
+        <div><b>90 days</b><span>warranty on repairs</span></div>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 300 260">
+        <ellipse cx="150" cy="232" rx="120" ry="10" fill="rgba(16,32,29,.08)"/>
+        <rect x="52" y="52" width="196" height="128" rx="12" fill="#10201d"/>
+        <rect x="62" y="62" width="176" height="108" rx="6" fill="#ffffff"/>
+        <rect x="76" y="78" width="90" height="10" rx="5" fill="#0f766e"/>
+        <rect x="76" y="98" width="140" height="7" rx="3.5" fill="#d7e5e1"/>
+        <rect x="76" y="112" width="120" height="7" rx="3.5" fill="#d7e5e1"/>
+        <rect x="76" y="136" width="64" height="20" rx="10" fill="#e3f2ee"/>
+        <path d="m86 146 5 5 9-10" stroke="#0f766e" stroke-width="3" fill="none" stroke-linecap="round"/>
+        <path d="M30 180h240l-14 22H44z" fill="#2c3f3b"/>
+        <rect x="126" y="184" width="48" height="6" rx="3" fill="#4b5f5a"/>
+        <rect x="222" y="120" width="44" height="80" rx="9" fill="#0f766e"/>
+        <rect x="227" y="128" width="34" height="58" rx="4" fill="#e3f2ee"/>
+        <circle cx="244" cy="193" r="3" fill="#e3f2ee"/>
+        <g transform="translate(40 40) rotate(-35)"><rect x="-6" y="0" width="12" height="70" rx="6" fill="#f2b33d"/><rect x="-2.5" y="-26" width="5" height="30" rx="2" fill="#7c8d89"/></g>
+      </svg>
+      <div class="float f1"><b>Screen replaced</b>Ready in 2 hours</div>
+      <div class="float f2"><b>No fix, no fee</b>Free diagnosis</div>
+    </div>
+  </div>
+
+  <section id="services">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Services</span>
+        <h2>What we can do for you</h2>
+        <p>Bring your device to our shop, or we come to your home or office. Prices below are starting prices; you always get an exact quote before we start.</p>
+      </div>
+      <div class="services" id="serviceGrid"></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">How it works</span>
+        <h2>Fixed in three easy steps</h2>
+      </div>
+      <div class="steps">
+        <div><h3>Tell us what's wrong</h3><p>Send a message on WhatsApp or fill in the form. A short description and a photo are enough.</p></div>
+        <div><h3>Get a clear price</h3><p>We check your device for free and tell you the exact price. Nothing happens until you say yes.</p></div>
+        <div><h3>Pick it up, working</h3><p>Most repairs are ready the same day. Every repair comes with a 90-day warranty.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="prices">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Prices</span>
+        <h2>Honest prices, no surprises</h2>
+        <p>Pay per repair, or choose a care plan if you want us to look after your devices all year.</p>
+      </div>
+      <div class="plans">
+        <div class="plan">
+          <h3>Single repair</h3>
+          <div class="for">For one-off problems</div>
+          <div class="amount">€0 <small>diagnosis</small></div>
+          <ul><li>Free check of your device</li><li>Exact quote before we start</li><li>90-day warranty</li><li>Pay only when it's fixed</li></ul>
+          <a class="btn line" href="#contact" data-plan="Single repair">Book a repair</a>
+        </div>
+        <div class="plan best">
+          <span class="badge">Most popular</span>
+          <h3>Home Care</h3>
+          <div class="for">For families, up to 5 devices</div>
+          <div class="amount">€12 <small>/ month</small></div>
+          <ul><li>Yearly check-up and cleaning</li><li>Remote help when you're stuck</li><li>20% off all repairs</li><li>Priority same-day service</li></ul>
+          <a class="btn" href="#contact" data-plan="Home Care plan">Choose Home Care</a>
+        </div>
+        <div class="plan">
+          <h3>Office Care</h3>
+          <div class="for">For small teams, up to 15 devices</div>
+          <div class="amount">€49 <small>/ month</small></div>
+          <ul><li>Everything in Home Care</li><li>Wi-Fi, printer and backup setup</li><li>On-site visit every quarter</li><li>Help within 4 working hours</li></ul>
+          <a class="btn line" href="#contact" data-plan="Office Care plan">Choose Office Care</a>
+        </div>
+      </div>
+      <div class="price-list">
+        <h3>Common repairs</h3>
+        <div class="pl-row"><span>Laptop or PC clean-up and speed boost</span><b>€49</b></div>
+        <div class="pl-row"><span>Virus and malware removal</span><b>€59</b></div>
+        <div class="pl-row"><span>Phone screen replacement</span><b>from €79</b></div>
+        <div class="pl-row"><span>Phone or laptop battery replacement</span><b>from €59</b></div>
+        <div class="pl-row"><span>Data recovery from a broken drive</span><b>from €99</b></div>
+        <div class="pl-row"><span>Home visit (Leuven area)</span><b>€25</b></div>
+      </div>
+      <p class="fine">Example prices for this demo, including VAT. Parts are included in the "from" price for most common models.</p>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="wrap about">
+      <div>
+        <span class="kicker">About us</span>
+        <div class="sec-head" style="margin-bottom:20px"><h2>A small shop that explains things in plain words</h2></div>
+        <p>FixPoint started in 2019 at a kitchen table, fixing laptops for neighbours. Today we're a small shop with two technicians, but we still work the same way: we explain what's wrong without the jargon, and we only fix what really needs fixing.</p>
+        <p>We speak English, Dutch and Portuguese, and we're happy to help people who don't feel confident with technology. No question is too simple.</p>
+        <div class="values"><span>Plain-language advice</span><span>Repair before replace</span><span>Your data stays private</span></div>
+      </div>
+      <div class="team">
+        <div class="person"><div class="avatar" style="background:#0f766e">SV</div><h3>Sam Verbeke</h3><span>Founder, laptops &amp; PCs</span></div>
+        <div class="person"><div class="avatar" style="background:#c98a1f">LC</div><h3>Lia Costa</h3><span>Phones &amp; tablets</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Reviews</span>
+        <h2>What customers say</h2>
+        <p>Example reviews for this demo.</p>
+      </div>
+      <div class="quotes">
+        <div class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>My laptop was so slow I wanted to throw it away. Now it starts in seconds, and they told me exactly what they did.</p><cite>Example customer, Leuven</cite></div>
+        <div class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>New phone screen in under two hours, for less than the price they quoted on WhatsApp. Very friendly.</p><cite>Example customer, Kessel-Lo</cite></div>
+        <div class="quote"><div class="stars" aria-label="5 stars">★★★★★</div><p>We use Office Care for our small team. The printer finally works, and someone answers when we call.</p><cite>Example office client, Heverlee</cite></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="wrap">
+      <div class="sec-head"><span class="kicker">FAQ</span><h2>Good questions</h2></div>
+      <div class="faq">
+        <details><summary>How long does a repair take?</summary><p>Most repairs, like screens, batteries and clean-ups, are ready the same day. If we need to order a part, it usually takes two to three working days.</p></details>
+        <details><summary>Will I lose my photos and files?</summary><p>Almost never. We always make a backup before a big repair if your device still turns on, and we never look at your personal files.</p></details>
+        <details><summary>What if you can't fix it?</summary><p>Then you pay nothing. The diagnosis is free, and we only charge when the repair works.</p></details>
+        <details><summary>Do you come to my house?</summary><p>Yes. We visit homes and offices in the Leuven area for a small travel fee, or for free on the Office Care plan.</p></details>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="kicker">Contact</span>
+        <h2>Tell us what's wrong</h2>
+        <p>We usually reply within one working hour. Prefer to talk? Send us a WhatsApp message.</p>
+      </div>
+      <div class="contact">
+        <div class="info">
+          <h3>FixPoint</h3>
+          <p>Walk in, call or message us.</p>
+          <div class="item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2b33d" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg><div><b>Shop</b>Example Street 12, 3000 Leuven</div></div>
+          <div class="item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2b33d" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><b>Opening hours</b>Mon–Fri 9:00–18:00<br>Sat 10:00–14:00</div></div>
+          <div class="item"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f2b33d" stroke-width="2"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg><div><b>Email</b>hello@fixpoint.example</div></div>
+          <button class="btn wa" data-wa>Chat on WhatsApp</button>
+        </div>
+
+        <form class="card" id="contactForm" novalidate>
+          <div id="formFields">
+            <div class="fields">
+              <div><label for="c-name">Your name</label><input id="c-name" autocomplete="off" required></div>
+              <div><label for="c-phone">Phone or email</label><input id="c-phone" autocomplete="off" required></div>
+              <div class="full"><label for="c-service">What do you need?</label>
+                <select id="c-service"></select>
+              </div>
+              <div class="full"><span style="display:block;font-size:.86rem;font-weight:700;margin-bottom:8px">Where should we fix it?</span>
+                <div class="chips">
+                  <label><input type="radio" name="where" value="shop" checked>At your shop</label>
+                  <label><input type="radio" name="where" value="home">At my home</label>
+                  <label><input type="radio" name="where" value="office">At my office</label>
+                </div>
+              </div>
+              <div class="full"><label for="c-msg">Describe the problem</label><textarea id="c-msg" placeholder="For example: my laptop turns on but the screen stays black." required></textarea></div>
+            </div>
+            <p class="err" id="formErr" role="alert" hidden>Please fill in your name, how to reach you and the problem.</p>
+            <div class="form-foot">
+              <small>Demo form: nothing is sent anywhere.</small>
+              <button class="btn" type="submit" id="sendBtn">Send request</button>
+            </div>
+          </div>
+          <div class="sent" id="sent" hidden role="status">
+            <div class="tick"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg></div>
+            <h3>Thanks, <span id="sentName"></span>!</h3>
+            <p>In a real site, FixPoint would now get your request by email and reply within one working hour.</p>
+            <p style="margin-top:20px"><button class="btn line" type="button" id="again">Send another request</button></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<button class="wa-float" data-wa aria-label="Chat on WhatsApp">
+  <svg width="32" height="32" viewBox="0 0 24 24" aria-hidden="true"><path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm5.3 13.6c-.2.6-1.3 1.2-1.8 1.3-.5 0-1 .2-3.3-.7-2.8-1.1-4.6-4-4.7-4.2-.1-.2-1.1-1.5-1.1-2.9 0-1.4.7-2 1-2.3.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .5l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.3 2.4 1.5.3.1.5.1.7-.1l1-1.2c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.5.3.1.2.1.7-.1 1.3z"/></svg>
+</button>
+<div class="toast" id="toast" role="status"></div>
+
+<footer>
+  <div class="wrap">
+    <div class="f-grid">
+      <div><h4>FixPoint</h4><p>Computer and phone repair for homes and small offices in the Leuven area.</p></div>
+      <div><h4>Services</h4><ul><li><a href="#services">Laptop repair</a></li><li><a href="#services">Phone repair</a></li><li><a href="#prices">Care plans</a></li></ul></div>
+      <div><h4>Company</h4><ul><li><a href="#about">About us</a></li><li><a href="#reviews">Reviews</a></li><li><a href="#contact">Contact</a></li></ul></div>
+      <div><h4>Legal</h4><ul><li><a href="#">Privacy policy</a></li><li><a href="#">Terms</a></li><li><a href="#">Cookies</a></li></ul></div>
+    </div>
+    <div class="f-bottom">
+      <p>© 2026 FixPoint. A demo business, not a real shop.</p>
+      <p>Built by <a href="../../" style="color:#fff">Farias IT Services</a>.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+  /* For a real client: put their WhatsApp number here, with country code and no "+" or spaces (e.g. "32470123456").
+     While it's empty, the WhatsApp buttons only show a demo message. */
+  const WHATSAPP_NUMBER = "";
+  const WHATSAPP_TEXT = "Hi FixPoint! I'd like help with a repair.";
+
+  const icon = d => `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#0f766e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${d}</svg>`;
+  const services = [
+    {name:"Laptop & PC repair", from:"€49", text:"Slow start, strange noises, broken keys or a black screen. We find the problem and fix it.", d:'<rect x="4" y="5" width="16" height="11" rx="1.5"/><path d="M2 19h20"/>'},
+    {name:"Phone & tablet repair", from:"€59", text:"Cracked screens, tired batteries and charging ports that don't charge anymore.", d:'<rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18h2"/>'},
+    {name:"Virus removal", from:"€59", text:"Pop-ups, strange programs or a computer that feels hacked. We clean it and keep it safe.", d:'<path d="M12 3 4 6v6c0 4.5 3.4 8.3 8 9 4.6-.7 8-4.5 8-9V6z"/><path d="m9 12 2 2 4-4"/>'},
+    {name:"Data recovery", from:"€99", text:"Photos and files from a broken laptop, phone or USB drive. Free check first.", d:'<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>'},
+    {name:"Wi-Fi & printer setup", from:"€39", text:"Weak Wi-Fi at home, a printer that won't connect, or a new smart TV to set up.", d:'<path d="M2 9a15 15 0 0 1 20 0M5.5 12.5a10 10 0 0 1 13 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="19.5" r="1"/>'},
+    {name:"New device setup", from:"€35", text:"We move your photos, contacts and apps to your new phone or laptop, and set it up for you.", d:'<path d="M12 3v12M7 10l5 5 5-5"/><path d="M4 17v3h16v-3"/>'},
+  ];
+  document.getElementById("serviceGrid").innerHTML = services.map(s => `
+    <article class="svc">
+      <div class="ico">${icon(s.d)}</div>
+      <h3>${s.name}</h3>
+      <p>${s.text}</p>
+      <div class="from">From <b>${s.from}</b></div>
+    </article>`).join("");
+
+  const select = document.getElementById("c-service");
+  select.innerHTML = [...services.map(s => s.name), "Home Care plan", "Office Care plan", "Something else"].map(n => `<option>${n}</option>`).join("");
+
+  // Pricing buttons pre-select the plan in the form
+  document.querySelectorAll("[data-plan]").forEach(a => a.addEventListener("click", () => {
+    const opt = [...select.options].find(o => o.text === a.dataset.plan);
+    if (opt) select.value = opt.text;
+  }));
+
+  // WhatsApp
+  let tt;
+  function toast(msg){
+    const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show");
+    clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2600);
+  }
+  document.querySelectorAll("[data-wa]").forEach(b => b.addEventListener("click", () => {
+    if (WHATSAPP_NUMBER) window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_TEXT)}`, "_blank", "noopener");
+    else toast("Demo: on a real site this opens a WhatsApp chat with the business.");
+  }));
+
+  // Mobile menu
+  const menu = document.getElementById("menu"), menuBtn = document.getElementById("menuBtn");
+  menuBtn.addEventListener("click", () => { const o = menu.classList.toggle("open"); menuBtn.setAttribute("aria-expanded", o); });
+  menu.querySelectorAll("a").forEach(a => a.addEventListener("click", () => { menu.classList.remove("open"); menuBtn.setAttribute("aria-expanded", false); }));
+
+  // Contact form (demo only)
+  const form = document.getElementById("contactForm");
+  form.addEventListener("submit", e => {
+    e.preventDefault();
+    const ok = [...form.querySelectorAll("[required]")].every(i => i.value.trim());
+    document.getElementById("formErr").hidden = ok;
+    if (!ok) return;
+    const btn = document.getElementById("sendBtn");
+    btn.disabled = true; btn.textContent = "Sending…";
+    setTimeout(() => {
+      document.getElementById("sentName").textContent = document.getElementById("c-name").value.trim().split(" ")[0];
+      document.getElementById("formFields").hidden = true;
+      document.getElementById("sent").hidden = false;
+      btn.disabled = false; btn.textContent = "Send request";
+      form.reset();
+    }, 900);
+  });
+  document.getElementById("again").addEventListener("click", () => {
+    document.getElementById("sent").hidden = true;
+    document.getElementById("formFields").hidden = false;
+  });
+</script>
+</body>
+</html>
